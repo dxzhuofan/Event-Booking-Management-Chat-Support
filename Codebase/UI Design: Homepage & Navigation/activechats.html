@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Chats | EventBook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f1f5f9;
+            --sidebar-bg: #1e293b;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --transition: all 0.2s ease;
+        }
+
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); display: flex; height: 100vh; }
+
+        /* Sidebar Styling (Duplicate for consistency) */
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-header { padding: 2.5rem 2rem; font-size: 1.5rem; font-weight: 700; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { padding: 0 1rem; }
+        .nav-item { display: flex; align-items: center; padding: 14px 18px; color: #cbd5e1; text-decoration: none; border-radius: 12px; margin-bottom: 8px; }
+        .nav-item i { margin-right: 12px; width: 20px; }
+        .nav-item.active { background: var(--primary); color: white; }
+
+        /* Chat Layout */
+        .chat-container { display: flex; flex-grow: 1; overflow: hidden; }
+        .chat-list { width: 350px; background: white; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+        .list-header { padding: 20px; border-bottom: 1px solid #f1f5f9; }
+        .search-box input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none; box-sizing: border-box;}
+        
+        .contact-item { display: flex; padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #f8fafc; align-items: center; }
+        .contact-item:hover { background: #f8fafc; }
+        .contact-item.active { background: #eff6ff; border-left: 4px solid var(--primary); }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; }
+
+        .chat-window { flex-grow: 1; display: flex; flex-direction: column; background: #f8fafc; }
+        .chat-header { padding: 15px 25px; background: white; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .messages-area { flex-grow: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        
+        .msg { max-width: 60%; padding: 12px 16px; border-radius: 15px; font-size: 0.95rem; }
+        .msg.received { align-self: flex-start; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .msg.sent { align-self: flex-end; background: var(--primary); color: white; }
+        
+        .input-area { padding: 20px; background: white; display: flex; gap: 10px; border-top: 1px solid #eee; }
+        .input-area input { flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
+        .send-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); color: white; border: none; cursor: pointer; }
+
+        @media (max-width: 1024px) { .sidebar { width: 80px; } .sidebar span, .sidebar-header { display: none; } .nav-item { justify-content: center; } .nav-item i { margin: 0; } }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">EventBook</div>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="activechats.html" class="nav-item active"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="booking.html" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+        </nav>
+    </aside>
+
+    <div class="chat-container">
+        <div class="chat-list">
+            <div class="list-header">
+                <h2>Active Chats</h2>
+                <div class="search-box"><input type="text" placeholder="Search guests..." id="chatSearch"></div>
+            </div>
+            <div class="contacts">
+                <div class="contact-item active">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+J&background=ee7752&color=fff" class="avatar">
+                    <div class="contact-info"><span class="name" style="font-weight:600;">Sarah Jenkins</span><br><small>Ballroom inquiry...</small></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-window">
+            <div class="chat-header">
+                <h3>Sarah Jenkins</h3>
+                <i class="fas fa-info-circle" style="color:#64748b; cursor:pointer;"></i>
+            </div>
+            <div class="messages-area" id="msgArea">
+                <div class="msg received">Hello! Is the Grand Ballroom available for June 13th?</div>
+                <div class="msg sent">Checking that for you right now, Sarah!</div>
+            </div>
+            <div class="input-area">
+                <input type="text" placeholder="Type a message..." id="chatInput">
+                <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const msgArea = document.getElementById('msgArea');
+
+        function sendMsg() {
+            if (chatInput.value.trim()) {
+                const msg = document.createElement('div');
+                msg.className = 'msg sent';
+                msg.innerText = chatInput.value;
+                msgArea.appendChild(msg);
+                chatInput.value = '';
+                msgArea.scrollTop = msgArea.scrollHeight;
+            }
+        }
+
+        sendBtn.onclick = sendMsg;
+        chatInput.onkeypress = (e) => { if(e.key === 'Enter') sendMsg(); };
+
+        // Search logic
+        document.getElementById('chatSearch').onkeyup = function() {
+            let term = this.value.toLowerCase();
+            document.querySelectorAll('.contact-item').forEach(item => {
+                let name = item.querySelector('.name').innerText.toLowerCase();
+                item.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        };
+    </script>
+</body>
+</html>
