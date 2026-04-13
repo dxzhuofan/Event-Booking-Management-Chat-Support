@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings | EventBook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #2563eb; --bg: #f1f5f9; --text-main: #1e293b; --text-muted: #64748b; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); display: flex; }
+        
+        .sidebar { width: 260px; background: #1e293b; color: white; display: flex; flex-direction: column; min-height: 100vh; flex-shrink: 0; }
+        .sidebar-header { padding: 2.5rem 2rem; font-size: 1.5rem; font-weight: 700; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { padding: 0 1rem; }
+        .nav-item { display: flex; align-items: center; padding: 14px 18px; color: #cbd5e1; text-decoration: none; border-radius: 12px; margin-bottom: 8px; }
+        .nav-item.active { background: var(--primary); color: white; }
+        .nav-item i { margin-right: 12px; width: 20px; }
+
+        .container { flex-grow: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .pipeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+        .pipe-card { background: white; padding: 1.5rem; border-radius: 16px; border-bottom: 4px solid #e2e8f0; }
+        .pipe-card.confirmed { border-bottom-color: #10b981; }
+
+        .booking-list-card { background: white; border-radius: 20px; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; background: #f8fafc; color: var(--text-muted); font-size: 0.85rem; }
+        td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; }
+        
+        .badge { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+        .badge-confirmed { background: #dcfce7; color: #166534; }
+
+        @media (max-width: 1024px) { .sidebar { width: 80px; } .sidebar span, .sidebar-header { display: none; } .nav-item { justify-content: center; } .nav-item i { margin: 0; } }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">EventBook</div>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="activechats.html" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="booking.html" class="nav-item active"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+        </nav>
+    </aside>
+
+    <div class="container">
+        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+            <h2>Event Bookings</h2>
+            <button style="background:var(--primary); color:white; border:none; padding:12px 20px; border-radius:10px; cursor:pointer;">+ New Booking</button>
+        </header>
+
+        <div class="pipeline">
+            <div class="pipe-card"><h4>Revenue</h4><div style="font-size:1.5rem; font-weight:700;">$42,800</div></div>
+            <div class="pipe-card confirmed"><h4>Confirmed</h4><div style="font-size:1.5rem; font-weight:700;">28</div></div>
+        </div>
+
+        <div class="booking-list-card">
+            <input type="text" placeholder="Filter bookings..." id="bookSearch" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
+            <table>
+                <thead>
+                    <tr><th>Event & Client</th><th>Date</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody id="bookTable">
+                    <tr><td><strong>Jenkins Wedding</strong><br><small>Sarah Jenkins</small></td><td>June 13, 2026</td><td>$12,500</td><td><span class="badge badge-confirmed">Confirmed</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('bookSearch').onkeyup = function() {
+            let term = this.value.toLowerCase();
+            document.querySelectorAll('#bookTable tr').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
+            });
+        };
+    </script>
+</body>
+</html>
