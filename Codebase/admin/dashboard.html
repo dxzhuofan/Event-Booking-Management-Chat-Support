@@ -210,14 +210,16 @@
             </table>
         </div>
     </main>
+    <div>
 
+    </div>
     <script>
         // Shared Navigation Script
         document.querySelectorAll('.nav-item').forEach(item => {
             if (item.getAttribute('href') === window.location.pathname.split("/").pop()) {
                 item.classList.add('active');
             }
-        });
+        })
 
         // Live stats simulation
         setInterval(() => {
