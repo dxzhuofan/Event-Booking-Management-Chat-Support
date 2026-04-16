@@ -16,8 +16,7 @@ Integration Testing
 - Booking system working correctly
 
 Issues Found
-- 
-- 
+- No issue
 
 Conclusion
-All core features were tested. System is mostly functional with minor issues (waiting paak backend pre para ma try talaga).
+All core features were tested. 
