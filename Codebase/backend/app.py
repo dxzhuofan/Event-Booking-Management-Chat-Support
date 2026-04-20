@@ -43,6 +43,16 @@ def homepage():
 
 @app.route("/login")
 def login():
+    return render_template("login/index.html")
+
+
+@app.route("/register")
+def register():
+    return render_template("login/register.html")
+
+
+@app.route("/login/alt")
+def login_alt():
     return render_template("login/login.html")
 
 
