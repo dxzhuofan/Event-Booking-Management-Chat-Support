@@ -3,44 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Homepage</title>
-    <link rel="stylesheet" href="../../static/css/homepage.css">
+    <title>Event Booking Management | DashDesk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
 </head>
 <body>
 
-    <nav>
+    <nav class="top-nav">
         <div class="logo">DashDesk</div>
         <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
+        <div class="auth-actions">
+            <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+            <a href="{{ url_for('register') }}" class="btn">Register</a>
+        </div>
     </nav>
 
-    <header class="hero">
-        <h1>Welcome to DashDesk</h1>
-        <p class="hero-subtitle">Book. Done. Next.</p>
-        <a href="../login/login.html" class="btn">Get Started</a>
+    <header id="home" class="hero">
+        <h1>Event Booking Management Made Simple</h1>
+        <p class="hero-subtitle">Manage inquiries, schedules, confirmations, and customer support from one organized platform.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('login') }}" class="btn">Login</a>
+            <a href="#services" class="btn btn-outline-light">Explore Services</a>
+        </div>
     </header>
 
-    <section class="features">
-        <div class="card">
-            <h3>Responsive Design</h3>
-            <p>Looks great on mobile, tablet, and desktop screens automatically.</p>
+    <section id="about" class="section about">
+        <div class="section-header">
+            <h2>About Our Platform</h2>
+            <p>DashDesk helps event teams reduce manual work and keep every booking step visible.</p>
         </div>
-        <div class="card">
-            <h3>Fast Loading</h3>
-            <p>Optimized code to ensure your users aren't kept waiting.</p>
+        <div class="about-grid">
+            <article class="card">
+                <h3>Centralized Booking Workflow</h3>
+                <p>Track every event from first inquiry to final confirmation with clear status updates and timelines.</p>
+            </article>
+            <article class="card">
+                <h3>Real-Time Team Visibility</h3>
+                <p>Let support and operations teams collaborate through shared dashboards, active chats, and booking queues.</p>
+            </article>
+            <article class="card">
+                <h3>Customer-First Experience</h3>
+                <p>Respond faster, personalize communication, and deliver smooth booking journeys for every client.</p>
+            </article>
         </div>
-        <div class="card">
-            <h3>Modern UI</h3>
-            <p>Clean aesthetics following the latest design trends of 2026.</p>
+    </section>
+
+    <section id="services" class="section services">
+        <div class="section-header">
+            <h2>Services</h2>
+            <p>Everything you need to run event bookings efficiently.</p>
+        </div>
+        <div class="services-grid">
+            <article class="card service-card">
+                <h3>Event Inquiry Management</h3>
+                <p>Capture and organize requests by event type, date preference, and customer details.</p>
+            </article>
+            <article class="card service-card">
+                <h3>Booking & Calendar Coordination</h3>
+                <p>Avoid schedule conflicts and keep confirmed dates aligned across your team.</p>
+            </article>
+            <article class="card service-card">
+                <h3>Customer Support Dashboard</h3>
+                <p>Handle live chat and follow-ups quickly to improve booking conversion and satisfaction.</p>
+            </article>
+            <article class="card service-card">
+                <h3>Reporting & Insights</h3>
+                <p>Monitor response times, booking volume, and team performance in one place.</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="contact" class="section contact">
+        <div class="section-header">
+            <h2>Contact</h2>
+            <p>Need help setting up your event booking workflow? Reach out to our team.</p>
+        </div>
+        <div class="contact-panel">
+            <p><strong>Email:</strong> support@dashdesk-events.com</p>
+            <p><strong>Phone:</strong> +1 (555) 018-2026</p>
+            <p><strong>Hours:</strong> Monday to Friday, 9:00 AM to 6:00 PM</p>
+            <a href="{{ url_for('register') }}" class="btn">Create Account</a>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 DashDesk. All rights reserved.</p>
+        <p>&copy; 2026 DashDesk Event Booking Management. All rights reserved.</p>
     </footer>
 
 </body>
