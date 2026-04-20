@@ -44,6 +44,13 @@
     </div>
 
     <script>
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const href = item.getAttribute('href');
+            if (window.location.pathname.endsWith(href)) {
+                item.classList.add('active');
+            }
+        });
+
         document.getElementById('bookSearch').onkeyup = function() {
             let term = this.value.toLowerCase();
             document.querySelectorAll('#bookTable tr').forEach(row => {

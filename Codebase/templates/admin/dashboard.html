@@ -74,10 +74,11 @@
     <script>
         // Shared Navigation Script
         document.querySelectorAll('.nav-item').forEach(item => {
-            if (item.getAttribute('href') === window.location.pathname.split("/").pop()) {
+            const href = item.getAttribute('href');
+            if (window.location.pathname.endsWith(href)) {
                 item.classList.add('active');
             }
-        })
+        });
 
         // Live stats simulation
         setInterval(() => {

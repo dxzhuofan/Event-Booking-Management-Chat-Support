@@ -50,6 +50,13 @@
     </div>
 
     <script>
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const href = item.getAttribute('href');
+            if (window.location.pathname.endsWith(href)) {
+                item.classList.add('active');
+            }
+        });
+
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');
         const msgArea = document.getElementById('msgArea');
