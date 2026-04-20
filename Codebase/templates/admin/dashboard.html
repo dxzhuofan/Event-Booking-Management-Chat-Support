@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Dashboard | EventBook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/dashboard.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">EventBook</div>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-item active"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="activechats.html" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="booking.html" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h2 class="section-title">Support Overview</h2>
+                <p class="header-subtitle">You have <strong class="text-primary">3 new</strong> requests.</p>
+            </div>
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=Alex+Smith&background=2563eb&color=fff" class="user-avatar">
+                <span class="user-name">Alex Smith</span>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Live Chats</h3>
+                <div class="value" id="live-chats">24</div>
+                <div class="stat-change stat-up"><i class="fas fa-arrow-up"></i> 12% increase</div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg. Response</h3>
+                <div class="value">1m 42s</div>
+                <div class="stat-change stat-down"><i class="fas fa-arrow-down"></i> 5% slow</div>
+            </div>
+            <div class="stat-card">
+                <h3>CSAT Score</h3>
+                <div class="value">4.8/5.0</div>
+                <div class="stat-change stat-primary"><i class="fas fa-star"></i> Top Tier</div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h3>Incoming Requests</h3>
+            <table>
+                <thead>
+                    <tr><th>Customer</th><th>Event Type</th><th>Wait Time</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sarah Jenkins</strong></td>
+                        <td>Wedding Venue</td>
+                        <td>2m ago</td>
+                        <td><span class="status status-online">Waiting</span></td>
+                        <td><a href="activechats.html" class="action-link">Accept Chat</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <div>
+
+    </div>
+    <script>
+        // Shared Navigation Script
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.getAttribute('href') === window.location.pathname.split("/").pop()) {
+                item.classList.add('active');
+            }
+        })
+
+        // Live stats simulation
+        setInterval(() => {
+            const el = document.getElementById('live-chats');
+            if(el) el.innerText = Math.floor(Math.random() * (28 - 22) + 22);
+        }, 5000);
+    </script>
+</body>
+</html>
