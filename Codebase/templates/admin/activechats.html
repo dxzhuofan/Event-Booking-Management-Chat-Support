@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Chats | EventBook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/activechats.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">EventBook</div>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="activechats.html" class="nav-item active"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="booking.html" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+        </nav>
+    </aside>
+
+    <div class="chat-container">
+        <div class="chat-list">
+            <div class="list-header">
+                <h2>Active Chats</h2>
+                <div class="search-box"><input type="text" placeholder="Search guests..." id="chatSearch"></div>
+            </div>
+            <div class="contacts">
+                <div class="contact-item active">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+J&background=ee7752&color=fff" class="avatar">
+                    <div class="contact-info"><span class="name contact-name">Sarah Jenkins</span><br><small>Ballroom inquiry...</small></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-window">
+            <div class="chat-header">
+                <h3>Sarah Jenkins</h3>
+                <i class="fas fa-info-circle info-icon"></i>
+            </div>
+            <div class="messages-area" id="msgArea">
+                <div class="msg received">Hello! Is the Grand Ballroom available for June 13th?</div>
+                <div class="msg sent">Checking that for you right now, Sarah!</div>
+            </div>
+            <div class="input-area">
+                <input type="text" placeholder="Type a message..." id="chatInput">
+                <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const msgArea = document.getElementById('msgArea');
+
+        function sendMsg() {
+            if (chatInput.value.trim()) {
+                const msg = document.createElement('div');
+                msg.className = 'msg sent';
+                msg.innerText = chatInput.value;
+                msgArea.appendChild(msg);
+                chatInput.value = '';
+                msgArea.scrollTop = msgArea.scrollHeight;
+            }
+        }
+
+        sendBtn.onclick = sendMsg;
+        chatInput.onkeypress = (e) => { if(e.key === 'Enter') sendMsg(); };
+
+        // Search logic
+        document.getElementById('chatSearch').onkeyup = function() {
+            let term = this.value.toLowerCase();
+            document.querySelectorAll('.contact-item').forEach(item => {
+                let name = item.querySelector('.name').innerText.toLowerCase();
+                item.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        };
+    </script>
+</body>
+</html>

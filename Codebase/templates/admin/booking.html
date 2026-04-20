@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings | EventBook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/booking.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">EventBook</div>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="activechats.html" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="booking.html" class="nav-item active"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+        </nav>
+    </aside>
+
+    <div class="container">
+        <header class="page-header">
+            <h2>Event Bookings</h2>
+            <button class="primary-button">+ New Booking</button>
+        </header>
+
+        <div class="pipeline">
+            <div class="pipe-card"><h4>Revenue</h4><div class="pipe-value">$42,800</div></div>
+            <div class="pipe-card confirmed"><h4>Confirmed</h4><div class="pipe-value">28</div></div>
+        </div>
+
+        <div class="booking-list-card">
+            <input type="text" placeholder="Filter bookings..." id="bookSearch" class="table-filter">
+            <table>
+                <thead>
+                    <tr><th>Event & Client</th><th>Date</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody id="bookTable">
+                    <tr><td><strong>Jenkins Wedding</strong><br><small>Sarah Jenkins</small></td><td>June 13, 2026</td><td>$12,500</td><td><span class="badge badge-confirmed">Confirmed</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('bookSearch').onkeyup = function() {
+            let term = this.value.toLowerCase();
+            document.querySelectorAll('#bookTable tr').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
+            });
+        };
+    </script>
+</body>
+</html>
