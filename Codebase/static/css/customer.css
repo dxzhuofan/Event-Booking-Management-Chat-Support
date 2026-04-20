@@ -1,0 +1,27 @@
+:root { --primary: #2563eb; --bg: #f1f5f9; --text-main: #1e293b; --text-muted: #64748b; }
+body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); display: flex; }
+
+.sidebar { width: 260px; background: #1e293b; color: white; display: flex; flex-direction: column; min-height: 100vh; flex-shrink: 0; }
+.sidebar-header { padding: 2.5rem 2rem; font-size: 1.5rem; font-weight: 700; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.nav-links { padding: 0 1rem; }
+.nav-item { display: flex; align-items: center; padding: 14px 18px; color: #cbd5e1; text-decoration: none; border-radius: 12px; margin-bottom: 8px; }
+.nav-item.active { background: var(--primary); color: white; }
+.nav-item i { margin-right: 12px; width: 20px; }
+
+.container { flex-grow: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.search-input { padding: 10px; border-radius: 10px; border: 1px solid #ddd; width: 300px; }
+.customer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+.customer-card { background: white; border-radius: 20px; padding: 1.8rem; border: 1px solid #e2e8f0; position: relative; transition: 0.3s; }
+.customer-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+.profile-img { width: 64px; height: 64px; border-radius: 16px; margin-right: 15px; }
+.vip-badge { position: absolute; top: 15px; right: 15px; background: #fef3c7; color: #92400e; padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; }
+
+.customer-head { display: flex; align-items: center; margin-bottom: 1.5rem; }
+.customer-name { margin: 0; }
+.customer-actions { display: flex; gap: 10px; }
+
+.btn-outline { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; background: transparent; cursor: pointer; font-weight: 600; }
+.btn-outline:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+@media (max-width: 1024px) { .sidebar { width: 80px; } .sidebar span, .sidebar-header { display: none; } .nav-item { justify-content: center; } .nav-item i { margin: 0; } }
