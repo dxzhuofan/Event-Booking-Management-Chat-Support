@@ -1,7 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+import os
 
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATES_DIR = os.path.join(BASE_DIR, "..", "templates")
+STATIC_DIR = os.path.join(BASE_DIR, "..", "static")
+
+app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
 CORS(app)  # This allows your frontend to connect to the backend
 
 # Mock database of events for your chatbot to "know" things
@@ -29,6 +34,41 @@ def chat_endpoint():
         "status": "success",
         "reply": reply
     })
+
+
+@app.route("/")
+def homepage():
+    return render_template("customer/homepage.html")
+
+
+@app.route("/login")
+def login():
+    return render_template("login/login.html")
+
+
+@app.route("/login/customer")
+def login_customer():
+    return render_template("login/login_customer.html")
+
+
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    return render_template("admin/dashboard.html")
+
+
+@app.route("/admin/activechats")
+def admin_activechats():
+    return render_template("admin/activechats.html")
+
+
+@app.route("/admin/booking")
+def admin_booking():
+    return render_template("admin/booking.html")
+
+
+@app.route("/admin/customer")
+def admin_customer():
+    return render_template("admin/customer.html")
 
 if __name__ == '__main__':
     # Run the server
