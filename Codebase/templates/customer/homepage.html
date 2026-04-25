@@ -8,6 +8,17 @@
 </head>
 <body>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <script>
+                window.addEventListener("DOMContentLoaded", () => {
+                    const flashes = {{ messages|tojson }};
+                    flashes.forEach(([, message]) => window.alert(message));
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
+
     <nav class="top-nav">
         <div class="logo">DashDesk</div>
         <ul class="nav-links">
