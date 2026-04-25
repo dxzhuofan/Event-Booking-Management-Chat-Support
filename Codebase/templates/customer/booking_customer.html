@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventBook - Customer Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/booking_customer.css') }}">
+</head>
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <script>
+                window.addEventListener("DOMContentLoaded", () => {
+                    const flashes = {{ messages|tojson }};
+                    flashes.forEach(([, message]) => window.alert(message));
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
+
+    <header class="navbar">
+        <div class="brand-group">
+            <a class="logout-btn" href="{{ url_for('logout') }}">Logout</a>
+            <div class="logo"><strong>Event</strong>Book</div>
+        </div>
+        <nav>
+            <a href="{{ url_for('homepage') }}">Home</a>
+            <a href="#my-bookings">My Bookings</a>
+            <a href="#support">Help</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero-text">
+            <h1>Book Your Event</h1>
+            <p>Select your preferred date, time, and venue package.</p>
+        </section>
+
+        <section class="card workspace-section" id="my-bookings">
+            <div class="section-head">
+                <div>
+                    <h3>My Bookings</h3>
+                    <p class="section-copy">Review recent bookings and load one into the summary panel.</p>
+                </div>
+                <div class="section-actions">
+                    <label class="history-search">
+                        <span class="sr-only">Search bookings</span>
+                        <input type="search" id="booking-search" placeholder="Search bookings...">
+                    </label>
+                    <div class="filter-pills" role="group" aria-label="Booking filters">
+                        <button class="filter-pill is-active" type="button" data-filter="all">All</button>
+                        <button class="filter-pill" type="button" data-filter="upcoming">Upcoming</button>
+                        <button class="filter-pill" type="button" data-filter="completed">Completed</button>
+                        <button class="filter-pill" type="button" data-filter="cancelled">Cancelled</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-history-grid" id="booking-history">
+                <button class="booking-card" type="button" data-status="upcoming" data-date="January 15, 2026" data-time="10:00 - 18:00" data-venue="Economy Session" data-subtotal="2700" data-tax="324" data-total="3024">
+                    <div class="booking-card-top">
+                        <div>
+                            <h4>January Strategy Session</h4>
+                            <p>Economy Session · Lobby Space</p>
+                        </div>
+                        <span class="booking-status upcoming">Upcoming</span>
+                    </div>
+                    <div class="booking-meta">
+                        <span><i class="fa-regular fa-calendar"></i> January 15, 2026</span>
+                        <span><i class="fa-regular fa-clock"></i> 10:00 - 18:00</span>
+                    </div>
+                    <div class="booking-card-foot">
+                        <strong>₱ 3,024.00</strong>
+                        <span>Tap to load</span>
+                    </div>
+                </button>
+
+                <button class="booking-card" type="button" data-status="completed" data-date="December 20, 2025" data-time="13:00 - 20:00" data-venue="Compact Summit" data-subtotal="3909" data-tax="469.08" data-total="4378.08">
+                    <div class="booking-card-top">
+                        <div>
+                            <h4>Year-End Team Summit</h4>
+                            <p>Compact Summit · Studio Hall</p>
+                        </div>
+                        <span class="booking-status completed">Completed</span>
+                    </div>
+                    <div class="booking-meta">
+                        <span><i class="fa-regular fa-calendar"></i> December 20, 2025</span>
+                        <span><i class="fa-regular fa-clock"></i> 13:00 - 20:00</span>
+                    </div>
+                    <div class="booking-card-foot">
+                        <strong>₱ 4,378.08</strong>
+                        <span>Tap to load</span>
+                    </div>
+                </button>
+
+                <button class="booking-card" type="button" data-status="upcoming" data-date="January 28, 2026" data-time="15:00 - 22:00" data-venue="Executive Conference" data-subtotal="5912" data-tax="709.44" data-total="6621.44">
+                    <div class="booking-card-top">
+                        <div>
+                            <h4>Executive Conference</h4>
+                            <p>Executive Conference · Premium Hall</p>
+                        </div>
+                        <span class="booking-status upcoming">Upcoming</span>
+                    </div>
+                    <div class="booking-meta">
+                        <span><i class="fa-regular fa-calendar"></i> January 28, 2026</span>
+                        <span><i class="fa-regular fa-clock"></i> 15:00 - 22:00</span>
+                    </div>
+                    <div class="booking-card-foot">
+                        <strong>₱ 6,621.44</strong>
+                        <span>Tap to load</span>
+                    </div>
+                </button>
+
+                <button class="booking-card" type="button" data-status="cancelled" data-date="November 12, 2025" data-time="10:00 - 18:00" data-venue="Luxury Gala Setup" data-subtotal="8500" data-tax="1020" data-total="9520">
+                    <div class="booking-card-top">
+                        <div>
+                            <h4>Client Appreciation Gala</h4>
+                            <p>Luxury Gala Setup · Grand Ballroom</p>
+                        </div>
+                        <span class="booking-status cancelled">Cancelled</span>
+                    </div>
+                    <div class="booking-meta">
+                        <span><i class="fa-regular fa-calendar"></i> November 12, 2025</span>
+                        <span><i class="fa-regular fa-clock"></i> 10:00 - 18:00</span>
+                    </div>
+                    <div class="booking-card-foot">
+                        <strong>₱ 9,520.00</strong>
+                        <span>Tap to load</span>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <div class="grid-layout">
+            <div class="left-col">
+                <section class="card calendar-section">
+                    <h3>Select Booking Date & Time</h3>
+                    <div class="calendar-mock">
+                        <div class="cal-header">
+                            <span>&lt;</span>
+                            <strong>JANUARY 2026</strong>
+                            <span>&gt;</span>
+                        </div>
+                        <div class="days-grid">
+                            <span class="day-label">Sun</span><span class="day-label">Mon</span><span class="day-label">Tue</span><span class="day-label">Wed</span><span class="day-label">Thu</span><span class="day-label">Fri</span><span class="day-label">Sat</span>
+                            <button class="calendar-day muted" type="button" data-date="December 29, 2025">29</button>
+                            <button class="calendar-day muted" type="button" data-date="December 30, 2025">30</button>
+                            <button class="calendar-day muted" type="button" data-date="December 31, 2025">31</button>
+                            <button class="calendar-day current" type="button" data-date="January 1, 2026">1</button>
+                            <button class="calendar-day" type="button" data-date="January 2, 2026">2</button>
+                            <button class="calendar-day" type="button" data-date="January 3, 2026">3</button>
+                            <button class="calendar-day" type="button" data-date="January 4, 2026">4</button>
+                            <button class="calendar-day" type="button" data-date="January 5, 2026">5</button>
+                            <button class="calendar-day" type="button" data-date="January 6, 2026">6</button>
+                            <button class="calendar-day" type="button" data-date="January 7, 2026">7</button>
+                            <button class="calendar-day" type="button" data-date="January 8, 2026">8</button>
+                            <button class="calendar-day" type="button" data-date="January 9, 2026">9</button>
+                            <button class="calendar-day" type="button" data-date="January 10, 2026">10</button>
+                            <button class="calendar-day" type="button" data-date="January 11, 2026">11</button>
+                            <button class="calendar-day" type="button" data-date="January 12, 2026">12</button>
+                            <button class="calendar-day" type="button" data-date="January 13, 2026">13</button>
+                            <button class="calendar-day" type="button" data-date="January 14, 2026">14</button>
+                            <button class="calendar-day" type="button" data-date="January 15, 2026">15</button>
+                            <button class="calendar-day" type="button" data-date="January 16, 2026">16</button>
+                            <button class="calendar-day" type="button" data-date="January 17, 2026">17</button>
+                            <button class="calendar-day" type="button" data-date="January 18, 2026">18</button>
+                            <button class="calendar-day" type="button" data-date="January 19, 2026">19</button>
+                            <button class="calendar-day" type="button" data-date="January 20, 2026">20</button>
+                            <button class="calendar-day" type="button" data-date="January 21, 2026">21</button>
+                            <button class="calendar-day" type="button" data-date="January 22, 2026">22</button>
+                            <button class="calendar-day" type="button" data-date="January 23, 2026">23</button>
+                            <button class="calendar-day" type="button" data-date="January 24, 2026">24</button>
+                            <button class="calendar-day" type="button" data-date="January 25, 2026">25</button>
+                            <button class="calendar-day" type="button" data-date="January 26, 2026">26</button>
+                            <button class="calendar-day" type="button" data-date="January 27, 2026">27</button>
+                            <button class="calendar-day" type="button" data-date="January 28, 2026">28</button>
+                            <button class="calendar-day" type="button" data-date="January 29, 2026">29</button>
+                            <button class="calendar-day" type="button" data-date="January 30, 2026">30</button>
+                            <button class="calendar-day" type="button" data-date="January 31, 2026">31</button>
+                        </div>
+                    </div>
+                    
+                    <div class="time-pickers">
+                        <div class="input-group">
+                            <label>Select Time</label>
+                            <select id="start-time">
+                                <option>10:00</option>
+                                <option>13:00</option>
+                                <option>15:00</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>End Time</label>
+                            <select id="end-time">
+                                <option>18:00</option>
+                                <option>20:00</option>
+                                <option>22:00</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card venue-list">
+                    <h3>Available Venue Packages</h3>
+                    
+                    <div class="venue-item" data-price="2700">
+                        <div class="venue-img">Lobby Space</div>
+                        <div class="venue-info">
+                            <h4>Economy Session</h4>
+                            <p><i class="fa-regular fa-user"></i> 20-30 pax | <i class="fa-solid fa-wifi"></i> WiFi | <i class="fa-solid fa-video"></i> Basic AV</p>
+                        </div>
+                        <div class="venue-price">
+                            <span>₱ 2,700</span>
+                            <button class="btn-select" type="button">Select</button>
+                        </div>
+                    </div>
+
+                    <div class="venue-item" data-price="3909">
+                        <div class="venue-img">Studio Hall</div>
+                        <div class="venue-info">
+                            <h4>Compact Summit</h4>
+                            <p><i class="fa-regular fa-user"></i> 40-60 pax | <i class="fa-solid fa-microphone"></i> Stage Mic | <i class="fa-solid fa-camera"></i> Recording</p>
+                        </div>
+                        <div class="venue-price">
+                            <span>₱ 3,909</span>
+                            <button class="btn-select" type="button">Select</button>
+                        </div>
+                    </div>
+
+                    <div class="venue-item" data-price="5912">
+                        <div class="venue-img">Premium Hall</div>
+                        <div class="venue-info">
+                            <h4>Executive Conference</h4>
+                            <p><i class="fa-regular fa-user"></i> 80-120 pax | <i class="fa-solid fa-lightbulb"></i> Lighting | <i class="fa-solid fa-music"></i> Sound System</p>
+                        </div>
+                        <div class="venue-price">
+                            <span>₱ 5,912</span>
+                            <button class="btn-select" type="button">Select</button>
+                        </div>
+                    </div>
+
+                    <div class="venue-item" data-price="8500">
+                        <div class="venue-img">Grand Ballroom</div>
+                        <div class="venue-info">
+                            <h4>Luxury Gala Setup</h4>
+                            <p><i class="fa-regular fa-user"></i> 200-300 pax | <i class="fa-solid fa-display"></i> Full AV | <i class="fa-solid fa-utensils"></i> Catering Ready</p>
+                        </div>
+                        <div class="venue-price">
+                            <span>₱ 8,500</span>
+                            <button class="btn-select" type="button">Select</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="right-col">
+                <section class="card summary">
+                    <h3>Booking Summary</h3>
+                    <div class="summary-line"><span><i class="fa-regular fa-calendar"></i> Date</span> <span id="sum-date">January 15, 2026</span></div>
+                    <div class="summary-line"><span><i class="fa-regular fa-clock"></i> Time</span> <span id="sum-time">10:00 - 18:00</span></div>
+                    <div class="summary-line"><span><i class="fa-solid fa-location-dot"></i> Package</span> <span id="sum-venue">Not selected</span></div>
+                    <div class="summary-line"><span><i class="fa-solid fa-book"></i> Source</span> <span id="sum-source">New selection</span></div>
+                    <hr>
+                    <div class="summary-line"><span>Subtotal:</span> <span id="sum-subtotal">₱ 0.00</span></div>
+                    <div class="summary-line"><span>Tax:</span> <span id="sum-tax">₱ 0.00</span></div>
+                    <div class="summary-line total"><strong>Total:</strong> <strong id="sum-total">₱ 0.00</strong></div>
+                    <button class="btn-primary" id="checkout-btn" type="button" disabled>Proceed to Checkout</button>
+                </section>
+
+                <section class="card help-panel" id="support">
+                    <div class="section-head compact">
+                        <div>
+                            <h3>Help Center</h3>
+                            <p class="section-copy">Use quick answers, then continue the conversation in chat.</p>
+                        </div>
+                    </div>
+
+                    <div class="help-grid">
+                        <div class="help-column">
+                            <div class="help-card">
+                                <h4>Common questions</h4>
+                                <ul class="faq-list">
+                                    <li>
+                                        <strong>Can I change a booking date?</strong>
+                                        <span>Yes, select a booking from My Bookings to load its details and adjust your current selection.</span>
+                                    </li>
+                                    <li>
+                                        <strong>How do taxes work?</strong>
+                                        <span>Tax is calculated at 12% and shown in the booking summary before checkout.</span>
+                                    </li>
+                                    <li>
+                                        <strong>What if I need support?</strong>
+                                        <span>Use the shortcuts below or send a message in chat and the support bot will respond.</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="support-actions">
+                                <button class="support-btn" type="button" data-help-message="I need help changing a booking date.">Reschedule Help</button>
+                                <button class="support-btn" type="button" data-help-message="Please explain the tax and total calculation.">Billing Help</button>
+                                <button class="support-btn" type="button" data-help-message="I want to compare venue packages.">Package Compare</button>
+                                <button class="support-btn" type="button" data-help-message="I need to contact support directly.">Contact Support</button>
+                            </div>
+                        </div>
+
+                        <div class="help-column">
+                            <div class="chat-box">
+                                <div class="chat-header">
+                                    <div>
+                                        <strong>Need help?</strong>
+                                        <p class="chat-subtitle">Chat with our support team</p>
+                                    </div>
+                                </div>
+                                <div class="chat-messages" id="chat-window">
+                                    <div class="msg bot">Hi! I am Raijan from EventBook support. Need help with your booking?</div>
+                                    <div class="msg user">Yes, I need a package for January 15 around 10:00.</div>
+                                    <div class="msg bot">I can help with that. Choose a package first and I will suggest the best fit.</div>
+                                </div>
+                                <div class="chat-input">
+                                    <input type="text" id="user-input" placeholder="Type a message...">
+                                    <button id="send-btn" type="button" aria-label="Send message">➤</button>
+                                </div>
+                                <div class="quick-actions">
+                                    <button class="quick-btn" type="button" data-chat="Check package availability for January 15.">Check Availability</button>
+                                    <button class="quick-btn" type="button" data-chat="Show me venue package information.">Package Info</button>
+                                    <button class="quick-btn" type="button" data-chat="What are the pricing options?">Pricing</button>
+                                    <button class="quick-btn" type="button" data-chat="I need to contact support directly.">Call Support</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <form id="checkout-form" action="{{ url_for('confirm_booking') }}" method="post" class="hidden-form">
+        <input type="hidden" name="date" id="checkout-date">
+        <input type="hidden" name="time" id="checkout-time">
+        <input type="hidden" name="venue" id="checkout-venue">
+        <input type="hidden" name="subtotal" id="checkout-subtotal">
+        <input type="hidden" name="tax" id="checkout-tax">
+        <input type="hidden" name="total" id="checkout-total">
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const venueButtons = document.querySelectorAll(".btn-select");
+            const venueCards = document.querySelectorAll(".venue-item");
+            const calendarDays = document.querySelectorAll(".calendar-day:not(.muted)");
+            const bookingCards = document.querySelectorAll(".booking-card");
+            const bookingSearch = document.getElementById("booking-search");
+            const filterPills = document.querySelectorAll(".filter-pill");
+            const helpButtons = document.querySelectorAll(".support-btn");
+            const quickButtons = document.querySelectorAll(".quick-btn");
+
+            const startTimeEl = document.getElementById("start-time");
+            const endTimeEl = document.getElementById("end-time");
+
+            const summaryTimeEl = document.getElementById("sum-time");
+            const summaryVenueEl = document.getElementById("sum-venue");
+            const summaryDateEl = document.getElementById("sum-date");
+            const summarySourceEl = document.getElementById("sum-source");
+            const summarySubtotalEl = document.getElementById("sum-subtotal");
+            const summaryTaxEl = document.getElementById("sum-tax");
+            const summaryTotalEl = document.getElementById("sum-total");
+            const checkoutForm = document.getElementById("checkout-form");
+
+            const checkoutDateEl = document.getElementById("checkout-date");
+            const checkoutTimeEl = document.getElementById("checkout-time");
+            const checkoutVenueEl = document.getElementById("checkout-venue");
+            const checkoutSubtotalEl = document.getElementById("checkout-subtotal");
+            const checkoutTaxEl = document.getElementById("checkout-tax");
+            const checkoutTotalEl = document.getElementById("checkout-total");
+
+            const checkoutBtn = document.getElementById("checkout-btn");
+
+            const chatWindow = document.getElementById("chat-window");
+            const userInput = document.getElementById("user-input");
+            const sendBtn = document.getElementById("send-btn");
+
+            const formatPeso = (value) => `₱ ${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            let activeBookingFilter = "all";
+            let selectedBookingCard = null;
+            let selectedVenueName = "";
+            let selectedSubtotal = 0;
+            let selectedTax = 0;
+            let selectedTotal = 0;
+
+            const clearVenueSelection = () => {
+                venueCards.forEach((card) => card.classList.remove("selected"));
+                venueButtons.forEach((button) => {
+                    button.textContent = "Select";
+                    button.classList.remove("is-selected");
+                });
+            };
+
+            const syncCheckoutState = () => {
+                checkoutBtn.disabled = selectedSubtotal === 0;
+            };
+
+            const resetSummary = () => {
+                selectedVenueName = "";
+                selectedSubtotal = 0;
+                selectedTax = 0;
+                selectedTotal = 0;
+
+                summaryVenueEl.textContent = "Not selected";
+                summarySourceEl.textContent = "New selection";
+                summarySubtotalEl.textContent = formatPeso(0);
+                summaryTaxEl.textContent = formatPeso(0);
+                summaryTotalEl.textContent = formatPeso(0);
+                clearVenueSelection();
+                syncCheckoutState();
+            };
+
+            // Feature 1: Booking time summary.
+            const updateTimeSummary = () => {
+                summaryTimeEl.textContent = `${startTimeEl.value} - ${endTimeEl.value}`;
+            };
+
+            const updateDateSummary = (selectedDay) => {
+                summaryDateEl.textContent = selectedDay.dataset.date;
+                calendarDays.forEach((day) => day.classList.remove("current"));
+                selectedDay.classList.add("current");
+            };
+
+            // Feature 2: Venue selection and pricing summary.
+            const updateVenueSelection = (selectedCard) => {
+                const selectedName = selectedCard.querySelector("h4").textContent;
+                const selectedPrice = Number(selectedCard.dataset.price || 0);
+                const clickedButton = selectedCard.querySelector(".btn-select");
+                const alreadySelected = selectedCard.classList.contains("selected");
+
+                if (alreadySelected) {
+                    resetSummary();
+                    return;
+                }
+
+                const tax = selectedPrice * 0.12;
+                const total = selectedPrice + tax;
+
+                selectedVenueName = selectedName;
+                selectedSubtotal = selectedPrice;
+                selectedTax = tax;
+                selectedTotal = total;
+                summarySourceEl.textContent = "New selection";
+                if (selectedBookingCard) {
+                    selectedBookingCard.classList.remove("selected");
+                    selectedBookingCard = null;
+                }
+
+                summaryVenueEl.textContent = selectedName;
+                summarySubtotalEl.textContent = formatPeso(selectedPrice);
+                summaryTaxEl.textContent = formatPeso(tax);
+                summaryTotalEl.textContent = formatPeso(total);
+
+                clearVenueSelection();
+                selectedCard.classList.add("selected");
+
+                clickedButton.textContent = "Selected";
+                clickedButton.classList.add("is-selected");
+                syncCheckoutState();
+            };
+
+            const loadBookingCard = (bookingCard) => {
+                const bookingVenue = bookingCard.dataset.venue || "";
+                const subtotal = Number(bookingCard.dataset.subtotal || 0);
+                const tax = Number(bookingCard.dataset.tax || 0);
+                const total = Number(bookingCard.dataset.total || 0);
+                const bookingTitle = bookingCard.querySelector("h4").textContent;
+                const matchingVenueCard = Array.from(venueCards).find((card) => card.querySelector("h4").textContent.trim() === bookingVenue);
+
+                selectedBookingCard = bookingCard;
+                bookingCards.forEach((card) => card.classList.remove("selected"));
+                bookingCard.classList.add("selected");
+
+                selectedVenueName = bookingVenue;
+                selectedSubtotal = subtotal;
+                selectedTax = tax;
+                selectedTotal = total;
+
+                summaryDateEl.textContent = bookingCard.dataset.date || summaryDateEl.textContent;
+                summaryTimeEl.textContent = bookingCard.dataset.time || summaryTimeEl.textContent;
+                summaryVenueEl.textContent = bookingVenue;
+                summarySourceEl.textContent = bookingTitle;
+                summarySubtotalEl.textContent = formatPeso(subtotal);
+                summaryTaxEl.textContent = formatPeso(tax);
+                summaryTotalEl.textContent = formatPeso(total);
+
+                clearVenueSelection();
+
+                if (matchingVenueCard) {
+                    matchingVenueCard.classList.add("selected");
+                    const matchingButton = matchingVenueCard.querySelector(".btn-select");
+                    matchingButton.textContent = "Selected";
+                    matchingButton.classList.add("is-selected");
+                }
+
+                syncCheckoutState();
+            };
+
+            const applyBookingFilters = () => {
+                const searchQuery = bookingSearch.value.trim().toLowerCase();
+
+                bookingCards.forEach((card) => {
+                    const matchesFilter = activeBookingFilter === "all" || card.dataset.status === activeBookingFilter;
+                    const matchesSearch = card.textContent.toLowerCase().includes(searchQuery);
+                    card.hidden = !(matchesFilter && matchesSearch);
+                });
+            };
+
+            // Feature 3: Customer support chat.
+            const appendMessage = (role, text) => {
+                const messageEl = document.createElement("div");
+                messageEl.className = `msg ${role}`;
+                messageEl.textContent = text;
+                chatWindow.appendChild(messageEl);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            };
+
+            const sendChat = async () => {
+                const message = userInput.value.trim();
+                if (!message) {
+                    return;
+                }
+
+                appendMessage("user", message);
+                userInput.value = "";
+
+                try {
+                    const response = await fetch("/chat", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ message })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+
+                    const data = await response.json();
+                    appendMessage("bot", data.reply || "I can help you with booking details.");
+                } catch (error) {
+                    appendMessage("bot", "I can still help with your booking. Please try again in a moment.");
+                }
+            };
+
+            // Feature 4: Checkout validation feedback.
+            const handleCheckout = () => {
+                if (selectedSubtotal === 0) {
+                    return;
+                }
+
+                checkoutDateEl.value = summaryDateEl.textContent;
+                checkoutTimeEl.value = summaryTimeEl.textContent;
+                checkoutVenueEl.value = selectedVenueName;
+                checkoutSubtotalEl.value = selectedSubtotal.toFixed(2);
+                checkoutTaxEl.value = selectedTax.toFixed(2);
+                checkoutTotalEl.value = selectedTotal.toFixed(2);
+
+                checkoutForm.submit();
+            };
+
+            filterPills.forEach((button) => {
+                button.addEventListener("click", () => {
+                    activeBookingFilter = button.dataset.filter || "all";
+                    filterPills.forEach((pill) => pill.classList.remove("is-active"));
+                    button.classList.add("is-active");
+                    applyBookingFilters();
+                });
+            });
+
+            bookingSearch.addEventListener("input", applyBookingFilters);
+
+            bookingCards.forEach((card) => {
+                card.addEventListener("click", () => loadBookingCard(card));
+            });
+
+            venueButtons.forEach((button) => {
+                button.addEventListener("click", (event) => {
+                    const selectedCard = event.currentTarget.closest(".venue-item");
+                    updateVenueSelection(selectedCard);
+                });
+            });
+
+            startTimeEl.addEventListener("change", updateTimeSummary);
+            endTimeEl.addEventListener("change", updateTimeSummary);
+            checkoutBtn.addEventListener("click", handleCheckout);
+
+            calendarDays.forEach((day) => {
+                day.addEventListener("click", () => updateDateSummary(day));
+            });
+
+            quickButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    userInput.value = button.dataset.chat;
+                    sendChat();
+                });
+            });
+
+            helpButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    userInput.value = button.dataset.helpMessage || "I need help with my booking.";
+                    sendChat();
+                });
+            });
+
+            sendBtn.addEventListener("click", sendChat);
+            userInput.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    sendChat();
+                }
+            });
+
+            resetSummary();
+            updateTimeSummary();
+            applyBookingFilters();
+        });
+    </script>
+</body>
+</html>
