@@ -3,74 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Dashboard | EventBook</title>
+    <title>Support Dashboard | DashDesk</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/css/dashboard.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 <body>
-
     <aside class="sidebar">
-        <div class="sidebar-header">EventBook</div>
+        <div class="sidebar-header">DashDesk</div>
         <nav class="nav-links">
-            <a href="dashboard.html" class="nav-item active"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
-            <a href="activechats.html" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
-            <a href="booking.html" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
-            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item active"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="{{ url_for('admin_activechats') }}" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="{{ url_for('admin_booking') }}" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="{{ url_for('admin_customer') }}" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="{{ url_for('admin_venues') }}" class="nav-item"><i class="fas fa-image"></i> <span>Venues</span></a>
         </nav>
     </aside>
 
     <main class="main-content">
         <header>
             <div>
-                <h2 class="section-title">Support Overview</h2>
-                <p class="header-subtitle">You have <strong class="text-primary">3 new</strong> requests.</p>
+                <h2 class="section-title">Dashboard</h2>
+                <p class="header-subtitle"><strong class="text-primary" id="dashboard-active-chats-count">0</strong> active chats.</p>
             </div>
             <div class="user-profile">
-                <img src="https://ui-avatars.com/api/?name=Alex+Smith&background=2563eb&color=fff" class="user-avatar">
-                <span class="user-name">Alex Smith</span>
+                <img src="https://ui-avatars.com/api/?name=Admin&background=111111&color=fff" class="user-avatar" alt="Admin avatar">
+                <span class="user-name">Admin</span>
             </div>
         </header>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>Live Chats</h3>
-                <div class="value" id="live-chats">24</div>
-                <div class="stat-change stat-up"><i class="fas fa-arrow-up"></i> 12% increase</div>
+                <h3>Active Chats</h3>
+                <div class="value" id="dashboard-active-chats">0</div>
+                <div class="stat-change stat-up"><i class="fas fa-comment-dots"></i> live threads</div>
             </div>
             <div class="stat-card">
-                <h3>Avg. Response</h3>
-                <div class="value">1m 42s</div>
-                <div class="stat-change stat-down"><i class="fas fa-arrow-down"></i> 5% slow</div>
+                <h3>Bookings</h3>
+                <div class="value" id="dashboard-bookings">0</div>
+                <div class="stat-change stat-down"><i class="fas fa-calendar-check"></i> saved bookings</div>
             </div>
             <div class="stat-card">
-                <h3>CSAT Score</h3>
-                <div class="value">4.8/5.0</div>
-                <div class="stat-change stat-primary"><i class="fas fa-star"></i> Top Tier</div>
+                <h3>Revenue</h3>
+                <div class="value" id="dashboard-revenue">₱ 0.00</div>
+                <div class="stat-change stat-primary"><i class="fas fa-coins"></i> booking totals</div>
             </div>
         </div>
 
         <div class="content-card">
-            <h3>Incoming Requests</h3>
+            <h3>Recent Bookings</h3>
             <table>
                 <thead>
-                    <tr><th>Customer</th><th>Event Type</th><th>Wait Time</th><th>Status</th><th>Action</th></tr>
+                    <tr><th>Customer</th><th>Package</th><th>Date</th><th>Status</th><th>Action</th></tr>
                 </thead>
-                <tbody>
+                <tbody id="dashboard-bookings-body">
                     <tr>
-                        <td><strong>Sarah Jenkins</strong></td>
-                        <td>Wedding Venue</td>
-                        <td>2m ago</td>
-                        <td><span class="status status-online">Waiting</span></td>
-                        <td><a href="activechats.html" class="action-link">Accept Chat</a></td>
+                        <td colspan="5">Loading live booking data...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </main>
-    <div>
-
-    </div>
     <script>
         // Shared Navigation Script
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -80,11 +72,59 @@
             }
         });
 
-        // Live stats simulation
-        setInterval(() => {
-            const el = document.getElementById('live-chats');
-            if(el) el.innerText = Math.floor(Math.random() * (28 - 22) + 22);
-        }, 5000);
+        const formatDate = (isoDate) => {
+            if (!isoDate) return '-';
+            const value = new Date(`${isoDate}T00:00:00`);
+            if (Number.isNaN(value.getTime())) return isoDate;
+            return value.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        };
+
+        const formatCurrency = (value) => `₱ ${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        const statusClassFor = (status) => {
+            const normalized = String(status || '').toLowerCase();
+            if (normalized === 'upcoming') return 'status-online';
+            if (normalized === 'cancelled') return 'status-busy';
+            return 'status-online';
+        };
+
+        const loadDashboard = async () => {
+            try {
+                const response = await fetch('/api/admin/dashboard-summary');
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load dashboard data.');
+                }
+
+                const summary = data.summary || {};
+                document.getElementById('dashboard-active-chats-count').textContent = summary.active_chats || 0;
+                document.getElementById('dashboard-active-chats').textContent = summary.active_chats || 0;
+                document.getElementById('dashboard-bookings').textContent = summary.bookings || 0;
+                document.getElementById('dashboard-revenue').textContent = formatCurrency(summary.revenue || 0);
+
+                const tbody = document.getElementById('dashboard-bookings-body');
+                const recentBookings = Array.isArray(summary.recent_bookings) ? summary.recent_bookings : [];
+                if (!recentBookings.length) {
+                    tbody.innerHTML = '<tr><td colspan="5">No bookings found yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = recentBookings.map((booking) => `
+                    <tr>
+                        <td><strong>${booking.customer_name || booking.user_email || '-'}</strong><br><small>${booking.customer_email || booking.user_email || ''}</small></td>
+                        <td>${booking.venue_package?.name || '-'}</td>
+                        <td>${formatDate(booking.date)}</td>
+                        <td><span class="status ${statusClassFor(booking.status)}">${String(booking.status || 'upcoming').charAt(0).toUpperCase() + String(booking.status || 'upcoming').slice(1)}</span></td>
+                        <td><a href="{{ url_for('admin_booking') }}" class="action-link">Review</a></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                const tbody = document.getElementById('dashboard-bookings-body');
+                tbody.innerHTML = `<tr><td colspan="5">${error.message || 'Failed to load dashboard data.'}</td></tr>`;
+            }
+        };
+
+        loadDashboard();
     </script>
 </body>
 </html>
