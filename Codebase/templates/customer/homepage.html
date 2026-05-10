@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
 </head>
 <body>
+    {% set current_user = session.get('authenticated_user') %}
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -28,17 +29,31 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="auth-actions">
-            <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
-            <a href="{{ url_for('register') }}" class="btn">Register</a>
+            {% if current_user %}
+                <a href="{{ url_for('booking_page') }}" class="btn btn-outline">My Bookings</a>
+                <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+                <a href="{{ url_for('register') }}" class="btn">Register</a>
+            {% endif %}
         </div>
     </nav>
 
     <header id="home" class="hero">
         <h1>Event Booking Management Made Simple</h1>
-        <p class="hero-subtitle">Manage inquiries, schedules, confirmations, and customer support from one organized platform.</p>
+        {% if current_user %}
+            <p class="hero-subtitle">Welcome back, {{ current_user }}. Your session is active until you choose to log out.</p>
+        {% else %}
+            <p class="hero-subtitle">Manage inquiries, schedules, confirmations, and customer support from one organized platform.</p>
+        {% endif %}
         <div class="hero-actions">
-            <a href="{{ url_for('login') }}" class="btn">Login</a>
-            <a href="#services" class="btn btn-outline-light">Explore Services</a>
+            {% if current_user %}
+                <a href="{{ url_for('booking_page') }}" class="btn">Continue Booking</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn">Login</a>
+                <a href="#services" class="btn btn-outline-light">Explore Services</a>
+            {% endif %}
         </div>
     </header>
 

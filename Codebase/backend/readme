@@ -1,2 +1,34 @@
 
-hey
+Gmail Email Delivery Setup
+
+DashDesk sends booking confirmations, reminder emails, and explicit chatbot follow-up emails through Gmail SMTP.
+
+Required environment variables:
+
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=yourname@gmail.com
+SMTP_PASSWORD=your-16-character-gmail-app-password
+SMTP_USE_TLS=true
+SMTP_USE_SSL=false
+MAIL_FROM=yourname@gmail.com
+FLASK_SECRET_KEY=any-secure-random-string
+ADMIN_KEY=admin123
+
+How to create the Gmail app password:
+1. Turn on 2-Step Verification for the Gmail account.
+2. Open Google Account > Security > App passwords.
+3. Choose Mail and generate a 16-character app password.
+4. Put that password in SMTP_PASSWORD and restart the Flask app.
+
+What this app uses Gmail for:
+- Booking confirmation emails after checkout.
+- Upcoming and unpaid booking reminders.
+- Explicit chatbot follow-up emails when the user asks to email the summary.
+
+Useful endpoints:
+- /api/email/send sends a mail message through the logged-in Gmail account.
+- /chat can respond to booking questions and can also email a follow-up summary when the user asks for one.
+- /api/admin/email-health shows whether Gmail SMTP is configured.
+
+If Gmail does not deliver on the first try, check the Inbox, Spam, and Promotions folders, then confirm the app password and SMTP_HOST settings.

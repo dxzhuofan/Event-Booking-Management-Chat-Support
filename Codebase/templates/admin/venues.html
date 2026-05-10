@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue Packages | DashDesk</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/venues.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">DashDesk</div>
+        <nav class="nav-links">
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="{{ url_for('admin_activechats') }}" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="{{ url_for('admin_booking') }}" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="{{ url_for('admin_customer') }}" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="{{ url_for('admin_venues') }}" class="nav-item active"><i class="fas fa-image"></i> <span>Venues</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h2 class="section-title">Venue Packages</h2>
+            </div>
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=111111&color=fff" class="user-avatar" alt="Admin avatar">
+                <span class="user-name">Admin</span>
+            </div>
+        </header>
+
+        <div class="venue-shell">
+            <section class="panel-card">
+                <div class="panel-head">
+                    <div>
+                        <h3 id="form-title">Add Venue Package</h3>
+                        <p class="panel-note">Upload an image or paste an image URL. Prices are editable in the form.</p>
+                    </div>
+                    <button type="button" class="mini-btn" id="clear-form-btn">Reset</button>
+                </div>
+
+                <form id="venue-form" class="venue-form" enctype="multipart/form-data">
+                    <input type="hidden" id="venue-id" name="venue_id">
+
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Package Name</span>
+                            <input type="text" id="venue-name" name="name" placeholder="e.g. Executive Conference" required>
+                        </label>
+
+                        <label class="field">
+                            <span>Location Label</span>
+                            <input type="text" id="venue-location" name="location_label" placeholder="e.g. Premium Hall" required>
+                        </label>
+
+                        <label class="field">
+                            <span>Price</span>
+                            <input type="number" id="venue-price" name="price" placeholder="0.00" min="0" step="0.01" required>
+                        </label>
+
+                        <label class="field">
+                            <span>Upload Image</span>
+                            <input type="file" id="venue-image-file" name="image_file" accept="image/*">
+                        </label>
+                    </div>
+
+                    <label class="field">
+                        <span>Image URL (optional fallback)</span>
+                        <input type="text" id="venue-image-url" name="image_url" placeholder="/static/css/assets/prem_hall.jpeg or https://...">
+                    </label>
+
+                    <div class="preview-row">
+                        <div class="image-preview" id="image-preview">Preview</div>
+                        <div>
+                            <strong>Image preview</strong>
+                            <p class="panel-note" style="margin-top:0.35rem;">Selecting a file updates the preview immediately.</p>
+                        </div>
+                    </div>
+
+                    <label class="field">
+                        <span>Features</span>
+                        <textarea id="venue-features" name="features" placeholder="20-30 pax, WiFi, Basic AV"></textarea>
+                    </label>
+
+                    <div class="form-actions">
+                        <button type="submit" class="crud-btn primary" id="save-btn">Save Package</button>
+                        <button type="button" class="crud-btn ghost" id="cancel-edit-btn">Cancel Edit</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel-card">
+                <div class="panel-head">
+                    <div>
+                        <h3>Existing Packages</h3>
+                        <p class="panel-note">Edit prices, image URLs, or upload a new image for any package.</p>
+                    </div>
+                    <div class="panel-note" id="venue-count">0 packages</div>
+                </div>
+
+                <div class="venue-list" id="venue-list"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const venueForm = document.getElementById("venue-form");
+            const venueIdField = document.getElementById("venue-id");
+            const nameField = document.getElementById("venue-name");
+            const locationField = document.getElementById("venue-location");
+            const priceField = document.getElementById("venue-price");
+            const imageUrlField = document.getElementById("venue-image-url");
+            const imageFileField = document.getElementById("venue-image-file");
+            const featuresField = document.getElementById("venue-features");
+            const formTitle = document.getElementById("form-title");
+            const saveBtn = document.getElementById("save-btn");
+            const clearFormBtn = document.getElementById("clear-form-btn");
+            const cancelEditBtn = document.getElementById("cancel-edit-btn");
+            const venueList = document.getElementById("venue-list");
+            const venueCount = document.getElementById("venue-count");
+            const imagePreview = document.getElementById("image-preview");
+
+            let editingVenueId = null;
+
+            const formatPrice = (value) => Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            const resetPreview = () => {
+                imagePreview.style.backgroundImage = "none";
+                imagePreview.textContent = "Preview";
+            };
+
+            const setPreviewFromUrl = (url) => {
+                const cleanUrl = (url || "").trim();
+                if (!cleanUrl) {
+                    resetPreview();
+                    return;
+                }
+                imagePreview.style.backgroundImage = `url("${cleanUrl}")`;
+                imagePreview.textContent = "";
+            };
+
+            const clearForm = () => {
+                editingVenueId = null;
+                venueIdField.value = "";
+                venueForm.reset();
+                formTitle.textContent = "Add Venue Package";
+                saveBtn.textContent = "Save Package";
+                resetPreview();
+                imageUrlField.disabled = false;
+                imageFileField.value = "";
+            };
+
+            const featuresToText = (features) => Array.isArray(features) ? features.join(", ") : "";
+
+            const renderVenues = (venues) => {
+                venueList.innerHTML = "";
+                venueCount.textContent = `${venues.length} package${venues.length === 1 ? "" : "s"}`;
+
+                if (!venues.length) {
+                    venueList.innerHTML = '<div class="empty-state">No venue packages yet. Add the first one using the form.</div>';
+                    return;
+                }
+
+                venues.forEach((venue) => {
+                    const card = document.createElement("article");
+                    card.className = "venue-card";
+
+                    const thumb = document.createElement("div");
+                    thumb.className = "venue-thumb";
+                    const imageUrl = (venue.image_url || "").trim();
+                    if (imageUrl) {
+                        thumb.style.backgroundImage = `url("${imageUrl}")`;
+                    }
+
+                    const info = document.createElement("div");
+                    info.className = "venue-info";
+
+                    const title = document.createElement("h4");
+                    title.textContent = venue.name || "Unnamed package";
+
+                    const meta = document.createElement("p");
+                    meta.className = "venue-meta";
+                    meta.textContent = `${venue.location_label || "-"} · ₱ ${formatPrice(venue.price)}`;
+
+                    const features = document.createElement("p");
+                    features.className = "venue-features";
+                    const featureList = Array.isArray(venue.features) ? venue.features : [];
+                    features.textContent = featureList.length ? featureList.join(" • ") : "No features set";
+
+                    info.appendChild(title);
+                    info.appendChild(meta);
+                    info.appendChild(features);
+
+                    const actions = document.createElement("div");
+                    actions.className = "venue-actions";
+
+                    const editBtn = document.createElement("button");
+                    editBtn.type = "button";
+                    editBtn.className = "mini-btn";
+                    editBtn.textContent = "Edit";
+                    editBtn.addEventListener("click", () => {
+                        editingVenueId = venue.id;
+                        venueIdField.value = venue.id;
+                        nameField.value = venue.name || "";
+                        locationField.value = venue.location_label || "";
+                        priceField.value = venue.price ?? "";
+                        imageUrlField.value = venue.image_url || "";
+                        featuresField.value = featuresToText(venue.features);
+                        imageFileField.value = "";
+                        formTitle.textContent = `Edit Package #${venue.id}`;
+                        saveBtn.textContent = "Update Package";
+                        setPreviewFromUrl(venue.image_url || "");
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                    });
+
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.type = "button";
+                    deleteBtn.className = "mini-btn danger";
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.addEventListener("click", async () => {
+                        if (!window.confirm(`Delete ${venue.name}?`)) {
+                            return;
+                        }
+
+                        try {
+                            const response = await fetch(`/api/admin/venues/${venue.id}`, { method: "DELETE" });
+                            const data = await response.json();
+                            if (!response.ok) {
+                                throw new Error(data.message || "Failed to delete venue package.");
+                            }
+                            if (editingVenueId === venue.id) {
+                                clearForm();
+                            }
+                            await loadVenues();
+                        } catch (error) {
+                            window.alert(error.message || "Failed to delete venue package.");
+                        }
+                    });
+
+                    actions.appendChild(editBtn);
+                    actions.appendChild(deleteBtn);
+
+                    card.appendChild(thumb);
+                    card.appendChild(info);
+                    card.appendChild(actions);
+                    venueList.appendChild(card);
+                });
+            };
+
+            const loadVenues = async () => {
+                try {
+                    const response = await fetch("/api/admin/venues");
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || "Unable to load venue packages.");
+                    }
+                    renderVenues(data.venues || []);
+                } catch (error) {
+                    venueList.innerHTML = `<div class="empty-state">${error.message || "Unable to load venue packages."}</div>`;
+                    venueCount.textContent = "0 packages";
+                }
+            };
+
+            imageUrlField.addEventListener("input", () => {
+                if (imageFileField.files && imageFileField.files.length) {
+                    return;
+                }
+                setPreviewFromUrl(imageUrlField.value);
+            });
+
+            imageFileField.addEventListener("change", () => {
+                const file = imageFileField.files && imageFileField.files[0];
+                if (!file) {
+                    setPreviewFromUrl(imageUrlField.value);
+                    return;
+                }
+
+                const objectUrl = URL.createObjectURL(file);
+                setPreviewFromUrl(objectUrl);
+            });
+
+            venueForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData(venueForm);
+                const method = editingVenueId ? "PUT" : "POST";
+                const endpoint = editingVenueId ? `/api/admin/venues/${editingVenueId}` : "/api/admin/venues";
+
+                try {
+                    const response = await fetch(endpoint, {
+                        method,
+                        body: formData,
+                    });
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || "Unable to save venue package.");
+                    }
+
+                    clearForm();
+                    await loadVenues();
+                } catch (error) {
+                    window.alert(error.message || "Unable to save venue package.");
+                }
+            });
+
+            clearFormBtn.addEventListener("click", clearForm);
+            cancelEditBtn.addEventListener("click", clearForm);
+
+            clearForm();
+            loadVenues();
+        });
+    </script>
+</body>
+</html>

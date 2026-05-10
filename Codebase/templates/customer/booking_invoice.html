@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Invoice | DashDesk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/booking_invoice.css') }}">
+</head>
+<body>
+    <main class="invoice-shell">
+        <section class="invoice-card">
+            <div class="invoice-badge">Booking #{{ booking.id }}</div>
+            <h1>{{ venue_name }}</h1>
+            <p class="invoice-subtitle">{{ date_label }} · {{ time_label }}</p>
+
+            <div class="invoice-grid">
+                <div class="invoice-item">
+                    <span>Customer</span>
+                    <strong>{{ booking.user_email }}</strong>
+                </div>
+                <div class="invoice-item">
+                    <span>Venue</span>
+                    <strong>{{ venue_location }}</strong>
+                </div>
+                <div class="invoice-item">
+                    <span>Status</span>
+                    <strong>{{ status_label }}</strong>
+                </div>
+                <div class="invoice-item">
+                    <span>Payment</span>
+                    <strong>{{ payment_label }}</strong>
+                </div>
+            </div>
+
+            <div class="invoice-breakdown">
+                <div class="invoice-row"><span>Subtotal</span><strong>{{ subtotal_label }}</strong></div>
+                <div class="invoice-row"><span>Tax</span><strong>{{ tax_label }}</strong></div>
+                <div class="invoice-row total"><span>Total</span><strong>{{ total_label }}</strong></div>
+            </div>
+
+            {% if payment_label.lower() == 'paid' %}
+                <p class="invoice-note success">This booking is already paid. Use this page as your invoice copy.</p>
+            {% else %}
+                <p class="invoice-note">This booking is ready for payment review. No duplicate booking was created.</p>
+            {% endif %}
+
+            <div class="invoice-actions">
+                <a class="btn primary" href="{{ url_for('booking_page', booking_id=booking.id) }}">Back to Booking</a>
+                <a class="btn secondary" href="{{ url_for('homepage') }}">Go Home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

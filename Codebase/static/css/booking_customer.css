@@ -428,9 +428,19 @@ body {
     font-size: 0.75rem;
 }
 
-.cal-header span {
+.cal-nav {
+    border: none;
+    background: transparent;
     color: var(--muted);
     font-weight: 700;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.cal-nav:hover {
+    background: #f2f2f2;
+    color: #2b2b2b;
 }
 
 .days-grid {
@@ -492,7 +502,8 @@ body {
     font-weight: 600;
 }
 
-.input-group select {
+.input-group select,
+.input-group input {
     width: 100%;
     height: 34px;
     border-radius: 8px;
@@ -500,6 +511,13 @@ body {
     background: #f5f5f5;
     padding: 0 9px;
     font-size: 0.78rem;
+}
+
+.time-error {
+    margin: 10px 0 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #8d2d2d;
 }
 
 .venue-item {
@@ -522,6 +540,9 @@ body {
     width: 78px;
     height: 54px;
     background: #e7e7e7;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: #838383;
     display: flex;
     align-items: center;
@@ -530,6 +551,10 @@ body {
     font-size: 0.66rem;
     border-radius: 6px;
     padding: 6px;
+}
+
+.venue-img.has-image {
+    color: transparent;
 }
 
 .venue-info {
@@ -608,11 +633,45 @@ body {
     font-size: 0.8rem;
 }
 
+.summary-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
 .btn-primary {
     width: 100%;
     padding: 9px;
-    margin-top: 8px;
     font-size: 0.72rem;
+}
+
+.summary-actions .btn-primary {
+    width: auto;
+    flex: 1 1 170px;
+    margin-top: 0;
+}
+
+.btn-secondary {
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    background: #fff5f5;
+    color: #b91c1c;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 9px 12px;
+    font-size: 0.72rem;
+    flex: 0 0 auto;
+}
+
+.btn-secondary:hover {
+    background: #fee2e2;
+}
+
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .btn-primary:disabled {
