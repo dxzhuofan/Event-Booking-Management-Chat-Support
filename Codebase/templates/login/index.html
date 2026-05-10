@@ -32,6 +32,34 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
+        .card-top {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border: 1px solid #d8d8d8;
+            border-radius: 999px;
+            color: #111;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .home-link:hover {
+            background-color: #f5f5f5;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
         .brand {
             font-size: 12px;
             font-weight: 500;
@@ -193,7 +221,13 @@
     </script>
 
     <div class="card">
-        
+        <div class="card-top">
+            <a href="{{ url_for('homepage') }}" class="home-link">
+                <i class="fa-solid fa-house"></i>
+                Home
+            </a>
+        </div>
+
         <h2>Login to your account</h2>
 
         <form action="{{ url_for('login') }}" method="post">

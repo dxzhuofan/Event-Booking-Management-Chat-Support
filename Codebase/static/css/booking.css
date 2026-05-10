@@ -2,6 +2,7 @@
 body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); display: flex; color: var(--text-main); }
 
 .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; flex-shrink: 0; border-right: 1px solid var(--sidebar-border); }
+.sidebar { position: relative; z-index: 10; }
 .sidebar-header { padding: 2.5rem 2rem; font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
 .nav-links { padding: 0 1rem; }
 .nav-item { display: flex; align-items: center; padding: 14px 18px; color: var(--text-main); text-decoration: none; border-radius: 12px; margin-bottom: 8px; }
