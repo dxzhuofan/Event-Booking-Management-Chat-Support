@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="DashDesk favicon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16385f"/>
+      <stop offset="1" stop-color="#102844"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c7f4ff"/>
+      <stop offset="0.5" stop-color="#78d8ff"/>
+      <stop offset="1" stop-color="#3496ea"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6d79ff"/>
+      <stop offset="0.55" stop-color="#4258d1"/>
+      <stop offset="1" stop-color="#243b98"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c16de1"/>
+      <stop offset="0.5" stop-color="#913db9"/>
+      <stop offset="1" stop-color="#602a89"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="128" height="128" rx="24" fill="url(#bg)"/>
+
+  <g shape-rendering="geometricPrecision">
+    <polygon points="50,22 63,14 63,52 51,43 46,32" fill="url(#cyan)"/>
+    <polygon points="63,14 84,32 69,58 63,52" fill="url(#blue)"/>
+    <polygon points="51,43 63,52 55,73 39,66 46,32" fill="url(#blue)"/>
+    <polygon points="63,52 84,32 94,44 84,60 69,58" fill="url(#violet)"/>
+    <polygon points="69,58 84,60 84,96 76,111 63,116 63,89" fill="url(#cyan)"/>
+    <polygon points="51,43 69,58 63,89 48,80 39,66" fill="url(#blue)"/>
+    <polygon points="84,60 94,44 100,53 96,84 84,96" fill="url(#violet)"/>
+    <polygon points="63,89 76,111 68,115 57,100 48,80" fill="url(#cyan)" opacity="0.96"/>
+
+    <polygon points="50,22 61,18 63,30 55,38 46,32" fill="#f1fbff" opacity="0.18"/>
+    <polygon points="63,14 74,24 63,52 63,30" fill="#ffffff" opacity="0.12"/>
+    <polygon points="84,32 94,44 84,60 77,48" fill="#ffffff" opacity="0.10"/>
+    <polygon points="39,66 51,43 63,52 55,73" fill="#ffffff" opacity="0.08"/>
+    <polygon points="69,58 84,60 76,72 63,89" fill="#ffffff" opacity="0.08"/>
+  </g>
+</svg>
