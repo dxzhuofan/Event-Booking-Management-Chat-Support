@@ -22,7 +22,10 @@
     {% endwith %}
 
     <nav class="top-nav">
-        <div class="logo">DashDesk</div>
+        <div class="logo-wrap">
+            <img class="brand-icon" src="{{ url_for('static', filename='favicon.svg', v=2) }}" alt="" aria-hidden="true">
+            <div class="logo">DashDesk</div>
+        </div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -41,19 +44,13 @@
     </nav>
 
     <header id="home" class="hero">
-        <h1>Event Bookings, Unified.</h1>
-        {% if current_user %}
-            <p class="hero-subtitle">Welcome back, {{ current_user }}. Your session is active until you choose to log out.</p>
-        {% else %}
-            <p class="hero-subtitle">Manage inquiries, schedules, confirmations, and customer support from one organized platform.</p>
-        {% endif %}
+        <h1>Ready to plan your next event?</h1>
+        <p class="hero-subtitle">Manage your venues, schedules, and team visibility all in one place.</p>
         <div class="hero-actions">
             {% if current_user %}
                 <a href="{{ url_for('booking_page') }}" class="btn">Continue Booking</a>
-                <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="btn">Login</a>
-                <a href="#services" class="btn btn-outline-light">Explore Services</a>
             {% endif %}
         </div>
     </header>

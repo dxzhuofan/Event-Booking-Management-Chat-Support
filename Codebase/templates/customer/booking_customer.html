@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/booking_customer.css') }}">
 </head>
 <body>
+    {% set current_email = session.get('authenticated_user') %}
+    {% set current_name = session.get('authenticated_name') %}
+    {% if not current_name and current_email %}
+        {% set current_name = current_email.split('@')[0].replace('.', ' ').replace('_', ' ') %}
+    {% endif %}
+    {% set account_label = current_name.split()[0]|title if current_name else 'Profile' %}
+    {% set account_initial = account_label[:1]|upper if account_label else 'U' %}
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -23,14 +30,27 @@
 
     <header class="navbar">
         <div class="brand-group">
-            <a class="logout-btn" href="{{ url_for('logout') }}">Logout</a>
-            <div class="logo"><strong>DashDesk</strong></div>
+            <img class="brand-icon" src="{{ url_for('static', filename='favicon.svg', v=2) }}" alt="" aria-hidden="true">
+            <div class="logo">DashDesk</div>
         </div>
         <nav>
             <a href="{{ url_for('homepage') }}">Home</a>
             <a href="#my-bookings">My Bookings</a>
             <a href="#support">Help</a>
         </nav>
+        <div class="nav-right">
+            <div class="nav-divider"></div>
+            {% if current_email %}
+                <div class="account-badge" aria-label="Signed in as {{ account_label }}">
+                    <div class="avatar-circle">{{ account_initial }}</div>
+                    <div class="account-text">
+                        <span class="account-label">Your account</span>
+                        <span class="avatar-name">{{ account_label }}</span>
+                    </div>
+                </div>
+            {% endif %}
+            <a class="logout-btn" href="{{ url_for('logout') }}">Logout</a>
+        </div>
     </header>
 
     <main class="container">
