@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Bookings | EventBook</title>
+    <title>Manage Bookings | DashDesk</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/css/booking.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/booking.css') }}">
 </head>
 <body>
     <aside class="sidebar">
-        <div class="sidebar-header">EventBook</div>
+        <div class="sidebar-header">DashDesk</div>
         <nav class="nav-links">
-            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
-            <a href="activechats.html" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
-            <a href="booking.html" class="nav-item active"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
-            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="{{ url_for('admin_activechats') }}" class="nav-item"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="{{ url_for('admin_booking') }}" class="nav-item active"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="{{ url_for('admin_customer') }}" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="{{ url_for('admin_venues') }}" class="nav-item"><i class="fas fa-image"></i> <span>Venues</span></a>
         </nav>
     </aside>
 
     <div class="container">
         <header class="page-header">
             <h2>Event Bookings</h2>
-            <button class="primary-button">+ New Booking</button>
+            <p class="header-subtitle">Manage and review all event bookings, update payment statuses, and track revenue from one place.</p>
+
         </header>
 
         <div class="pipeline">
-            <div class="pipe-card"><h4>Revenue</h4><div class="pipe-value">$42,800</div></div>
-            <div class="pipe-card confirmed"><h4>Confirmed</h4><div class="pipe-value">28</div></div>
+            <div class="pipe-card"><h4>Revenue</h4><div class="pipe-value" id="admin-booking-revenue">₱ 0.00</div></div>
+            <div class="pipe-card confirmed"><h4>Confirmed</h4><div class="pipe-value" id="admin-booking-confirmed">0</div></div>
         </div>
 
         <div class="booking-list-card">
             <input type="text" placeholder="Filter bookings..." id="bookSearch" class="table-filter">
             <table>
                 <thead>
-                    <tr><th>Event & Client</th><th>Date</th><th>Amount</th><th>Status</th></tr>
+                    <tr><th>Event & Client</th><th>Date</th><th>Amount</th><th>Payment</th><th>Status</th><th>Action</th></tr>
                 </thead>
                 <tbody id="bookTable">
-                    <tr><td><strong>Jenkins Wedding</strong><br><small>Sarah Jenkins</small></td><td>June 13, 2026</td><td>$12,500</td><td><span class="badge badge-confirmed">Confirmed</span></td></tr>
+                    <tr><td colspan="6">Loading bookings...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -51,10 +52,124 @@
             }
         });
 
+        const bookingSearchParams = new URLSearchParams(window.location.search);
+        const customerEmailFilter = String(bookingSearchParams.get('customer_email') || '').trim().toLowerCase();
+
+        const formatDate = (isoDate) => {
+            if (!isoDate) return '-';
+            const value = new Date(`${isoDate}T00:00:00`);
+            if (Number.isNaN(value.getTime())) return isoDate;
+            return value.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        };
+
+        const formatCurrency = (value) => `₱ ${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        const paymentClassFor = (paymentStatus) => {
+            const normalized = String(paymentStatus || 'unpaid').toLowerCase();
+            return normalized === 'paid' ? 'badge-paid' : 'badge-unpaid';
+        };
+
+        const paymentLabel = (paymentStatus) => {
+            const normalized = String(paymentStatus || 'unpaid').toLowerCase();
+            return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+        };
+
+        const statusClassFor = (status) => {
+            const normalized = String(status || '').toLowerCase();
+            if (normalized === 'cancelled') return 'badge-cancelled';
+            if (normalized === 'completed') return 'badge-confirmed';
+            return 'badge-confirmed';
+        };
+
+        const statusLabel = (status) => {
+            const normalized = String(status || 'upcoming');
+            return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+        };
+
+        const loadBookings = async () => {
+            try {
+                const [summaryResponse, bookingsResponse] = await Promise.all([
+                    fetch('/api/admin/dashboard-summary'),
+                    fetch('/api/admin/bookings'),
+                ]);
+
+                const summaryData = await summaryResponse.json();
+                const bookingsData = await bookingsResponse.json();
+
+                if (!summaryResponse.ok) {
+                    throw new Error(summaryData.message || 'Failed to load booking summary.');
+                }
+                if (!bookingsResponse.ok) {
+                    throw new Error(bookingsData.message || 'Failed to load bookings.');
+                }
+
+                const rows = Array.isArray(bookingsData.bookings) ? bookingsData.bookings : [];
+                const visibleRows = customerEmailFilter
+                    ? rows.filter((booking) => String(booking.customer_email || booking.user_email || '').toLowerCase() === customerEmailFilter)
+                    : rows;
+
+                const revenueTotal = visibleRows.reduce((total, booking) => total + Number(booking.total || 0), 0);
+                const upcomingTotal = visibleRows.filter((booking) => String(booking.status || '').toLowerCase() === 'upcoming').length;
+
+                document.getElementById('admin-booking-revenue').textContent = formatCurrency(customerEmailFilter ? revenueTotal : (summaryData.summary?.revenue || 0));
+                document.getElementById('admin-booking-confirmed').textContent = customerEmailFilter ? upcomingTotal : (summaryData.summary?.upcoming_bookings || 0);
+
+                const table = document.getElementById('bookTable');
+                if (!visibleRows.length) {
+                    table.innerHTML = `<tr><td colspan="6">${customerEmailFilter ? 'No bookings found for this customer.' : 'No bookings found.'}</td></tr>`;
+                    return;
+                }
+
+                table.innerHTML = visibleRows.map((booking) => `
+                    <tr data-customer-email="${booking.customer_email || ''}">
+                        <td><strong>${booking.venue_package?.name || '-'}</strong><br><small>${booking.customer_name || booking.customer_email || '-'}</small></td>
+                        <td>${formatDate(booking.date)}</td>
+                        <td>${formatCurrency(booking.total || 0)}</td>
+                        <td><span class="badge ${paymentClassFor(booking.payment_status)}">${paymentLabel(booking.payment_status)}</span></td>
+                        <td><span class="badge ${statusClassFor(booking.status)}">${statusLabel(booking.status)}</span></td>
+                        <td>
+                            <button class="row-action ${String(booking.payment_status || 'unpaid').toLowerCase() === 'paid' ? 'secondary' : ''}" type="button" data-booking-id="${booking.id}" data-next-payment-status="${String(booking.payment_status || 'unpaid').toLowerCase() === 'paid' ? 'unpaid' : 'paid'}">
+                                ${String(booking.payment_status || 'unpaid').toLowerCase() === 'paid' ? 'Mark Unpaid' : 'Mark Paid'}
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                table.querySelectorAll('[data-booking-id]').forEach((button) => {
+                    button.addEventListener('click', async () => {
+                        const bookingId = button.getAttribute('data-booking-id');
+                        const nextPaymentStatus = button.getAttribute('data-next-payment-status');
+                        button.disabled = true;
+                        try {
+                            const response = await fetch(`/api/admin/bookings/${bookingId}/payment-status`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ payment_status: nextPaymentStatus }),
+                            });
+                            const result = await response.json();
+                            if (!response.ok) {
+                                throw new Error(result.message || 'Failed to update payment status.');
+                            }
+                            loadBookings();
+                        } catch (error) {
+                            alert(error.message || 'Failed to update payment status.');
+                            button.disabled = false;
+                        }
+                    });
+                });
+            } catch (error) {
+                document.getElementById('bookTable').innerHTML = `<tr><td colspan="6">${error.message || 'Failed to load bookings.'}</td></tr>`;
+            }
+        };
+
+        loadBookings();
+
         document.getElementById('bookSearch').onkeyup = function() {
-            let term = this.value.toLowerCase();
+            const term = this.value.toLowerCase();
             document.querySelectorAll('#bookTable tr').forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
+                const rowText = row.innerText.toLowerCase();
+                const matchesCustomer = customerEmailFilter ? String(row.dataset.customerEmail || '').toLowerCase() === customerEmailFilter : true;
+                row.style.display = matchesCustomer && rowText.includes(term) ? '' : 'none';
             });
         };
     </script>

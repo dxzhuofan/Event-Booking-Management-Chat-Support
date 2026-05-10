@@ -1,10 +1,11 @@
-:root { --primary: #2563eb; --bg: #f1f5f9; --text-main: #1e293b; --text-muted: #64748b; }
-body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); display: flex; }
+:root { --primary: #111111; --bg: #d9d9d9; --card-bg: #efefef; --surface-alt: #f7f7f7; --border: #cfcfcf; --sidebar-bg: #ececec; --sidebar-border: #d2d2d2; --text-main: #191919; --text-muted: #646464; }
+body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); display: flex; color: var(--text-main); }
 
-.sidebar { width: 260px; background: #1e293b; color: white; display: flex; flex-direction: column; min-height: 100vh; flex-shrink: 0; }
-.sidebar-header { padding: 2.5rem 2rem; font-size: 1.5rem; font-weight: 700; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.sidebar { width: 260px; background: var(--sidebar-bg); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; flex-shrink: 0; border-right: 1px solid var(--sidebar-border); }
+.sidebar-header { padding: 2.5rem 2rem; font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
 .nav-links { padding: 0 1rem; }
-.nav-item { display: flex; align-items: center; padding: 14px 18px; color: #cbd5e1; text-decoration: none; border-radius: 12px; margin-bottom: 8px; }
+.nav-item { display: flex; align-items: center; padding: 14px 18px; color: var(--text-main); text-decoration: none; border-radius: 12px; margin-bottom: 8px; }
+.nav-item:hover { background: #f2f2f2; color: #000; }
 .nav-item.active { background: var(--primary); color: white; }
 .nav-item i { margin-right: 12px; width: 20px; }
 
@@ -12,17 +13,35 @@ body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); dis
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 .primary-button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; }
 .pipeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
-.pipe-card { background: white; padding: 1.5rem; border-radius: 16px; border-bottom: 4px solid #e2e8f0; }
-.pipe-card.confirmed { border-bottom-color: #10b981; }
+.pipe-card { background: var(--card-bg); padding: 1.5rem; border-radius: 16px; border-bottom: 4px solid var(--border); border: 1px solid var(--border); }
+.pipe-card.confirmed { border-bottom-color: #111111; }
 .pipe-value { font-size: 1.5rem; font-weight: 700; }
 
-.booking-list-card { background: white; border-radius: 20px; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-.table-filter { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+.booking-list-card { background: var(--card-bg); border-radius: 20px; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+.table-filter { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; background: var(--surface-alt); color: var(--text-main); }
 table { width: 100%; border-collapse: collapse; }
-th { text-align: left; padding: 15px; background: #f8fafc; color: var(--text-muted); font-size: 0.85rem; }
-td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; }
+th { text-align: left; padding: 15px; background: #f7f7f7; color: var(--text-muted); font-size: 0.85rem; }
+td { padding: 18px 15px; border-bottom: 1px solid var(--border); }
 
 .badge { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
-.badge-confirmed { background: #dcfce7; color: #166534; }
+.badge-confirmed { background: #e6e6e6; color: var(--text-main); }
+.badge-cancelled { background: #fee2e2; color: #991b1b; }
+.badge-paid { background: #dcfce7; color: #166534; }
+.badge-unpaid { background: #fef3c7; color: #92400e; }
+
+.row-action {
+	border: none;
+	background: var(--primary);
+	color: white;
+	padding: 9px 14px;
+	border-radius: 999px;
+	cursor: pointer;
+	font-weight: 700;
+}
+
+.row-action.secondary {
+	background: #e5e7eb;
+	color: var(--text-main);
+}
 
 @media (max-width: 1024px) { .sidebar { width: 80px; } .sidebar span, .sidebar-header { display: none; } .nav-item { justify-content: center; } .nav-item i { margin: 0; } }

@@ -160,6 +160,37 @@
         {% endif %}
     {% endwith %}
 
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const passwordInput = document.querySelector('input[name="password"]');
+            const toggle = document.querySelector(".form-group .right-icon");
+
+            if (!passwordInput || !toggle) {
+                return;
+            }
+
+            const apply = () => {
+                const shouldShow = passwordInput.type === "password";
+                passwordInput.type = shouldShow ? "text" : "password";
+                toggle.classList.toggle("fa-eye", shouldShow);
+                toggle.classList.toggle("fa-eye-slash", !shouldShow);
+                toggle.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+            };
+
+            toggle.setAttribute("role", "button");
+            toggle.setAttribute("tabindex", "0");
+            toggle.setAttribute("aria-label", "Show password");
+
+            toggle.addEventListener("click", apply);
+            toggle.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    apply();
+                }
+            });
+        });
+    </script>
+
     <div class="card">
         
         <h2>Login to your account</h2>

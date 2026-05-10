@@ -150,16 +150,27 @@
 </head>
 <body>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <script>
+                window.addEventListener("DOMContentLoaded", () => {
+                    const flashes = {{ messages|tojson }};
+                    flashes.forEach(([, message]) => window.alert(message));
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
+
     <div class="card">
         
         <h2>Create your account</h2>
 
-        <form action="#">
+        <form action="{{ url_for('register') }}" method="post">
             <div class="form-group">
                 <label>Full name</label>
                 <div class="input-wrapper">
                     <i class="fa-regular fa-user left-icon"></i>
-                    <input type="text" placeholder="Enter your full name" required>
+                    <input type="text" name="full_name" placeholder="Enter your full name" required>
                 </div>
             </div>
 
@@ -167,15 +178,15 @@
                 <label>Email</label>
                 <div class="input-wrapper">
                     <i class="fa-regular fa-envelope left-icon"></i>
-                    <input type="email" placeholder="Enter your email" required>
+                    <input type="email" name="email" placeholder="Enter your email" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Password</label>
                 <div class="input-wrapper">
-                    <input type="password" class="no-left-icon" placeholder="Create your password" required>
-                    <i class="fa-regular fa-eye-slash right-icon"></i>
+                    <input id="reg-password" type="password" name="password" class="no-left-icon" placeholder="Create your password" required>
+                    <i class="fa-regular fa-eye-slash right-icon" data-toggle="reg-password" aria-label="Show password" role="button" tabindex="0"></i>
                 </div>
             </div>
 
@@ -183,8 +194,8 @@
                 <label>Confirm Password</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-lock left-icon"></i>
-                    <input type="password" placeholder="Confirm your password" required>
-                    <i class="fa-regular fa-eye-slash right-icon"></i>
+                    <input id="reg-confirm-password" type="password" name="confirm_password" placeholder="Confirm your password" required>
+                    <i class="fa-regular fa-eye-slash right-icon" data-toggle="reg-confirm-password" aria-label="Show password" role="button" tabindex="0"></i>
                 </div>
             </div>
 
@@ -197,6 +208,34 @@
             </div>
         </form>
     </div>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const toggles = document.querySelectorAll(".right-icon[data-toggle]");
+
+            const toggleInput = (toggleEl) => {
+                const inputId = toggleEl.getAttribute("data-toggle");
+                const input = document.getElementById(inputId);
+                if (!input) return;
+
+                const shouldShow = input.type === "password";
+                input.type = shouldShow ? "text" : "password";
+                toggleEl.classList.toggle("fa-eye", shouldShow);
+                toggleEl.classList.toggle("fa-eye-slash", !shouldShow);
+                toggleEl.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+            };
+
+            toggles.forEach((toggleEl) => {
+                toggleEl.addEventListener("click", () => toggleInput(toggleEl));
+                toggleEl.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleInput(toggleEl);
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>
