@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Booking Management | DashDesk</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg', v=2) }}">
+    <title>DashDesk</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
 </head>
 <body>
@@ -40,7 +41,7 @@
     </nav>
 
     <header id="home" class="hero">
-        <h1>Event Booking Management Made Simple</h1>
+        <h1>Event Bookings, Unified.</h1>
         {% if current_user %}
             <p class="hero-subtitle">Welcome back, {{ current_user }}. Your session is active until you choose to log out.</p>
         {% else %}
@@ -109,7 +110,7 @@
             <p>Need help setting up your event booking workflow? Reach out to our team.</p>
         </div>
         <div class="contact-panel">
-            <p><strong>Email:</strong> support@dashdesk-events.com</p>
+            <p><strong>Email:</strong> dashdeskbooking@gmail.com</p>
             <p><strong>Phone:</strong> +1 (555) 018-2026</p>
             <p><strong>Hours:</strong> Monday to Friday, 9:00 AM to 6:00 PM</p>
             <a href="{{ url_for('register') }}" class="btn">Create Account</a>
