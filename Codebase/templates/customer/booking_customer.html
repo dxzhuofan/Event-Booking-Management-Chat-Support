@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EventBook - Customer Booking</title>
+    <title>DashDesk - Customer Booking</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/booking_customer.css') }}">
 </head>
@@ -23,7 +23,7 @@
     <header class="navbar">
         <div class="brand-group">
             <a class="logout-btn" href="{{ url_for('logout') }}">Logout</a>
-            <div class="logo"><strong>Event</strong>Book</div>
+            <div class="logo"><strong>DashDesk</strong></div>
         </div>
         <nav>
             <a href="{{ url_for('homepage') }}">Home</a>
@@ -58,79 +58,7 @@
                 </div>
             </div>
 
-            <div class="booking-history-grid" id="booking-history">
-                <button class="booking-card" type="button" data-status="upcoming" data-date="January 15, 2026" data-time="10:00 - 18:00" data-venue="Economy Session" data-subtotal="2700" data-tax="324" data-total="3024">
-                    <div class="booking-card-top">
-                        <div>
-                            <h4>January Strategy Session</h4>
-                            <p>Economy Session · Lobby Space</p>
-                        </div>
-                        <span class="booking-status upcoming">Upcoming</span>
-                    </div>
-                    <div class="booking-meta">
-                        <span><i class="fa-regular fa-calendar"></i> January 15, 2026</span>
-                        <span><i class="fa-regular fa-clock"></i> 10:00 - 18:00</span>
-                    </div>
-                    <div class="booking-card-foot">
-                        <strong>₱ 3,024.00</strong>
-                        <span>Tap to load</span>
-                    </div>
-                </button>
-
-                <button class="booking-card" type="button" data-status="completed" data-date="December 20, 2025" data-time="13:00 - 20:00" data-venue="Compact Summit" data-subtotal="3909" data-tax="469.08" data-total="4378.08">
-                    <div class="booking-card-top">
-                        <div>
-                            <h4>Year-End Team Summit</h4>
-                            <p>Compact Summit · Studio Hall</p>
-                        </div>
-                        <span class="booking-status completed">Completed</span>
-                    </div>
-                    <div class="booking-meta">
-                        <span><i class="fa-regular fa-calendar"></i> December 20, 2025</span>
-                        <span><i class="fa-regular fa-clock"></i> 13:00 - 20:00</span>
-                    </div>
-                    <div class="booking-card-foot">
-                        <strong>₱ 4,378.08</strong>
-                        <span>Tap to load</span>
-                    </div>
-                </button>
-
-                <button class="booking-card" type="button" data-status="upcoming" data-date="January 28, 2026" data-time="15:00 - 22:00" data-venue="Executive Conference" data-subtotal="5912" data-tax="709.44" data-total="6621.44">
-                    <div class="booking-card-top">
-                        <div>
-                            <h4>Executive Conference</h4>
-                            <p>Executive Conference · Premium Hall</p>
-                        </div>
-                        <span class="booking-status upcoming">Upcoming</span>
-                    </div>
-                    <div class="booking-meta">
-                        <span><i class="fa-regular fa-calendar"></i> January 28, 2026</span>
-                        <span><i class="fa-regular fa-clock"></i> 15:00 - 22:00</span>
-                    </div>
-                    <div class="booking-card-foot">
-                        <strong>₱ 6,621.44</strong>
-                        <span>Tap to load</span>
-                    </div>
-                </button>
-
-                <button class="booking-card" type="button" data-status="cancelled" data-date="November 12, 2025" data-time="10:00 - 18:00" data-venue="Luxury Gala Setup" data-subtotal="8500" data-tax="1020" data-total="9520">
-                    <div class="booking-card-top">
-                        <div>
-                            <h4>Client Appreciation Gala</h4>
-                            <p>Luxury Gala Setup · Grand Ballroom</p>
-                        </div>
-                        <span class="booking-status cancelled">Cancelled</span>
-                    </div>
-                    <div class="booking-meta">
-                        <span><i class="fa-regular fa-calendar"></i> November 12, 2025</span>
-                        <span><i class="fa-regular fa-clock"></i> 10:00 - 18:00</span>
-                    </div>
-                    <div class="booking-card-foot">
-                        <strong>₱ 9,520.00</strong>
-                        <span>Tap to load</span>
-                    </div>
-                </button>
-            </div>
+            <div class="booking-history-grid" id="booking-history"></div>
         </section>
 
         <div class="grid-layout">
@@ -139,141 +67,56 @@
                     <h3>Select Booking Date & Time</h3>
                     <div class="calendar-mock">
                         <div class="cal-header">
-                            <span>&lt;</span>
-                            <strong>JANUARY 2026</strong>
-                            <span>&gt;</span>
+                            <button class="cal-nav" id="cal-prev" type="button" aria-label="Previous month">&lt;</button>
+                            <strong id="cal-title">MONTH YYYY</strong>
+                            <button class="cal-nav" id="cal-next" type="button" aria-label="Next month">&gt;</button>
                         </div>
-                        <div class="days-grid">
+                        <div class="days-grid" id="calendar-grid">
                             <span class="day-label">Sun</span><span class="day-label">Mon</span><span class="day-label">Tue</span><span class="day-label">Wed</span><span class="day-label">Thu</span><span class="day-label">Fri</span><span class="day-label">Sat</span>
-                            <button class="calendar-day muted" type="button" data-date="December 29, 2025">29</button>
-                            <button class="calendar-day muted" type="button" data-date="December 30, 2025">30</button>
-                            <button class="calendar-day muted" type="button" data-date="December 31, 2025">31</button>
-                            <button class="calendar-day current" type="button" data-date="January 1, 2026">1</button>
-                            <button class="calendar-day" type="button" data-date="January 2, 2026">2</button>
-                            <button class="calendar-day" type="button" data-date="January 3, 2026">3</button>
-                            <button class="calendar-day" type="button" data-date="January 4, 2026">4</button>
-                            <button class="calendar-day" type="button" data-date="January 5, 2026">5</button>
-                            <button class="calendar-day" type="button" data-date="January 6, 2026">6</button>
-                            <button class="calendar-day" type="button" data-date="January 7, 2026">7</button>
-                            <button class="calendar-day" type="button" data-date="January 8, 2026">8</button>
-                            <button class="calendar-day" type="button" data-date="January 9, 2026">9</button>
-                            <button class="calendar-day" type="button" data-date="January 10, 2026">10</button>
-                            <button class="calendar-day" type="button" data-date="January 11, 2026">11</button>
-                            <button class="calendar-day" type="button" data-date="January 12, 2026">12</button>
-                            <button class="calendar-day" type="button" data-date="January 13, 2026">13</button>
-                            <button class="calendar-day" type="button" data-date="January 14, 2026">14</button>
-                            <button class="calendar-day" type="button" data-date="January 15, 2026">15</button>
-                            <button class="calendar-day" type="button" data-date="January 16, 2026">16</button>
-                            <button class="calendar-day" type="button" data-date="January 17, 2026">17</button>
-                            <button class="calendar-day" type="button" data-date="January 18, 2026">18</button>
-                            <button class="calendar-day" type="button" data-date="January 19, 2026">19</button>
-                            <button class="calendar-day" type="button" data-date="January 20, 2026">20</button>
-                            <button class="calendar-day" type="button" data-date="January 21, 2026">21</button>
-                            <button class="calendar-day" type="button" data-date="January 22, 2026">22</button>
-                            <button class="calendar-day" type="button" data-date="January 23, 2026">23</button>
-                            <button class="calendar-day" type="button" data-date="January 24, 2026">24</button>
-                            <button class="calendar-day" type="button" data-date="January 25, 2026">25</button>
-                            <button class="calendar-day" type="button" data-date="January 26, 2026">26</button>
-                            <button class="calendar-day" type="button" data-date="January 27, 2026">27</button>
-                            <button class="calendar-day" type="button" data-date="January 28, 2026">28</button>
-                            <button class="calendar-day" type="button" data-date="January 29, 2026">29</button>
-                            <button class="calendar-day" type="button" data-date="January 30, 2026">30</button>
-                            <button class="calendar-day" type="button" data-date="January 31, 2026">31</button>
                         </div>
                     </div>
                     
                     <div class="time-pickers">
                         <div class="input-group">
                             <label>Select Time</label>
-                            <select id="start-time">
-                                <option>10:00</option>
-                                <option>13:00</option>
-                                <option>15:00</option>
-                            </select>
+                            <input id="start-time" type="time" value="10:00" step="300">
                         </div>
                         <div class="input-group">
                             <label>End Time</label>
-                            <select id="end-time">
-                                <option>18:00</option>
-                                <option>20:00</option>
-                                <option>22:00</option>
-                            </select>
+                            <input id="end-time" type="time" value="18:00" step="300">
                         </div>
                     </div>
+                    <p class="time-error" id="time-error" hidden>End time must be after start time.</p>
                 </section>
 
                 <section class="card venue-list">
                     <h3>Available Venue Packages</h3>
-                    
-                    <div class="venue-item" data-price="2700">
-                        <div class="venue-img">Lobby Space</div>
-                        <div class="venue-info">
-                            <h4>Economy Session</h4>
-                            <p><i class="fa-regular fa-user"></i> 20-30 pax | <i class="fa-solid fa-wifi"></i> WiFi | <i class="fa-solid fa-video"></i> Basic AV</p>
-                        </div>
-                        <div class="venue-price">
-                            <span>₱ 2,700</span>
-                            <button class="btn-select" type="button">Select</button>
-                        </div>
-                    </div>
-
-                    <div class="venue-item" data-price="3909">
-                        <div class="venue-img">Studio Hall</div>
-                        <div class="venue-info">
-                            <h4>Compact Summit</h4>
-                            <p><i class="fa-regular fa-user"></i> 40-60 pax | <i class="fa-solid fa-microphone"></i> Stage Mic | <i class="fa-solid fa-camera"></i> Recording</p>
-                        </div>
-                        <div class="venue-price">
-                            <span>₱ 3,909</span>
-                            <button class="btn-select" type="button">Select</button>
-                        </div>
-                    </div>
-
-                    <div class="venue-item" data-price="5912">
-                        <div class="venue-img">Premium Hall</div>
-                        <div class="venue-info">
-                            <h4>Executive Conference</h4>
-                            <p><i class="fa-regular fa-user"></i> 80-120 pax | <i class="fa-solid fa-lightbulb"></i> Lighting | <i class="fa-solid fa-music"></i> Sound System</p>
-                        </div>
-                        <div class="venue-price">
-                            <span>₱ 5,912</span>
-                            <button class="btn-select" type="button">Select</button>
-                        </div>
-                    </div>
-
-                    <div class="venue-item" data-price="8500">
-                        <div class="venue-img">Grand Ballroom</div>
-                        <div class="venue-info">
-                            <h4>Luxury Gala Setup</h4>
-                            <p><i class="fa-regular fa-user"></i> 200-300 pax | <i class="fa-solid fa-display"></i> Full AV | <i class="fa-solid fa-utensils"></i> Catering Ready</p>
-                        </div>
-                        <div class="venue-price">
-                            <span>₱ 8,500</span>
-                            <button class="btn-select" type="button">Select</button>
-                        </div>
-                    </div>
+                    <div id="venue-list" aria-live="polite"></div>
                 </section>
             </div>
 
             <div class="right-col">
                 <section class="card summary">
                     <h3>Booking Summary</h3>
-                    <div class="summary-line"><span><i class="fa-regular fa-calendar"></i> Date</span> <span id="sum-date">January 15, 2026</span></div>
-                    <div class="summary-line"><span><i class="fa-regular fa-clock"></i> Time</span> <span id="sum-time">10:00 - 18:00</span></div>
+                    <div class="summary-line"><span><i class="fa-regular fa-calendar"></i> Date</span> <span id="sum-date">-</span></div>
+                    <div class="summary-line"><span><i class="fa-regular fa-clock"></i> Time</span> <span id="sum-time">-</span></div>
                     <div class="summary-line"><span><i class="fa-solid fa-location-dot"></i> Package</span> <span id="sum-venue">Not selected</span></div>
                     <div class="summary-line"><span><i class="fa-solid fa-book"></i> Source</span> <span id="sum-source">New selection</span></div>
                     <hr>
                     <div class="summary-line"><span>Subtotal:</span> <span id="sum-subtotal">₱ 0.00</span></div>
                     <div class="summary-line"><span>Tax:</span> <span id="sum-tax">₱ 0.00</span></div>
                     <div class="summary-line total"><strong>Total:</strong> <strong id="sum-total">₱ 0.00</strong></div>
-                    <button class="btn-primary" id="checkout-btn" type="button" disabled>Proceed to Checkout</button>
+                    <div class="summary-actions">
+                        <button class="btn-primary" id="checkout-btn" type="button" disabled>Proceed to Checkout</button>
+                        <button class="btn-secondary" id="cancel-btn" type="button" hidden>Cancel Booking</button>
+                    </div>
                 </section>
 
                 <section class="card help-panel" id="support">
                     <div class="section-head compact">
                         <div>
                             <h3>Help Center</h3>
-                            <p class="section-copy">Use quick answers, then continue the conversation in chat.</p>
+                            <p class="section-copy">Use a shortcut or ask a question in chat.</p>
                         </div>
                     </div>
 
@@ -298,10 +141,10 @@
                             </div>
 
                             <div class="support-actions">
-                                <button class="support-btn" type="button" data-help-message="I need help changing a booking date.">Reschedule Help</button>
-                                <button class="support-btn" type="button" data-help-message="Please explain the tax and total calculation.">Billing Help</button>
+                                <button class="support-btn" type="button" data-help-message="I need help rescheduling a booking.">Reschedule Help</button>
+                                <button class="support-btn" type="button" data-help-message="I need help with billing for this package.">Billing Help</button>
                                 <button class="support-btn" type="button" data-help-message="I want to compare venue packages.">Package Compare</button>
-                                <button class="support-btn" type="button" data-help-message="I need to contact support directly.">Contact Support</button>
+                                <button class="support-btn" type="button" data-help-message="I need help from support.">Contact Support</button>
                             </div>
                         </div>
 
@@ -310,23 +153,22 @@
                                 <div class="chat-header">
                                     <div>
                                         <strong>Need help?</strong>
-                                        <p class="chat-subtitle">Chat with our support team</p>
+                                        <p class="chat-subtitle">Booking support</p>
                                     </div>
                                 </div>
                                 <div class="chat-messages" id="chat-window">
-                                    <div class="msg bot">Hi! I am Raijan from EventBook support. Need help with your booking?</div>
-                                    <div class="msg user">Yes, I need a package for January 15 around 10:00.</div>
-                                    <div class="msg bot">I can help with that. Choose a package first and I will suggest the best fit.</div>
+                                    <div class="msg bot">Hello. I can help with venue availability, package details, booking status, and billing.</div>
                                 </div>
                                 <div class="chat-input">
                                     <input type="text" id="user-input" placeholder="Type a message...">
                                     <button id="send-btn" type="button" aria-label="Send message">➤</button>
                                 </div>
                                 <div class="quick-actions">
-                                    <button class="quick-btn" type="button" data-chat="Check package availability for January 15.">Check Availability</button>
-                                    <button class="quick-btn" type="button" data-chat="Show me venue package information.">Package Info</button>
+                                    <button class="quick-btn" type="button" data-chat="Check package availability for the selected date.">Check Availability</button>
+                                    <button class="quick-btn" type="button" data-chat="Show me venue package information.">Package Details</button>
                                     <button class="quick-btn" type="button" data-chat="What are the pricing options?">Pricing</button>
-                                    <button class="quick-btn" type="button" data-chat="I need to contact support directly.">Call Support</button>
+                                    <button class="quick-btn" type="button" data-chat="I need help from support.">Contact Support</button>
+                                    <button class="quick-btn" type="button" data-chat="Email me a summary of this conversation and my bookings.">Email Summary</button>
                                 </div>
                             </div>
                         </div>
@@ -337,8 +179,11 @@
     </main>
 
     <form id="checkout-form" action="{{ url_for('confirm_booking') }}" method="post" class="hidden-form">
+        <input type="hidden" name="booking_id" id="checkout-booking-id">
         <input type="hidden" name="date" id="checkout-date">
         <input type="hidden" name="time" id="checkout-time">
+        <input type="hidden" name="start_time" id="checkout-start-time">
+        <input type="hidden" name="end_time" id="checkout-end-time">
         <input type="hidden" name="venue" id="checkout-venue">
         <input type="hidden" name="subtotal" id="checkout-subtotal">
         <input type="hidden" name="tax" id="checkout-tax">
@@ -347,10 +192,18 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const venueButtons = document.querySelectorAll(".btn-select");
-            const venueCards = document.querySelectorAll(".venue-item");
-            const calendarDays = document.querySelectorAll(".calendar-day:not(.muted)");
-            const bookingCards = document.querySelectorAll(".booking-card");
+            const bookingPageUrl = "{{ url_for('booking_page') }}";
+            const bookingInvoiceBaseUrl = "{{ url_for('booking_invoice', booking_id=0) }}".replace(/\/0$/, "");
+            const initialBookingId = Number("{{ initial_booking_id|default('', true) }}") || null;
+            const venueList = document.getElementById("venue-list");
+            const bookingHistory = document.getElementById("booking-history");
+            const calendarGrid = document.getElementById("calendar-grid");
+            const calTitle = document.getElementById("cal-title");
+            const calPrev = document.getElementById("cal-prev");
+            const calNext = document.getElementById("cal-next");
+
+            let venueCards = [];
+            let bookingCards = [];
             const bookingSearch = document.getElementById("booking-search");
             const filterPills = document.querySelectorAll(".filter-pill");
             const helpButtons = document.querySelectorAll(".support-btn");
@@ -358,6 +211,7 @@
 
             const startTimeEl = document.getElementById("start-time");
             const endTimeEl = document.getElementById("end-time");
+            const timeErrorEl = document.getElementById("time-error");
 
             const summaryTimeEl = document.getElementById("sum-time");
             const summaryVenueEl = document.getElementById("sum-venue");
@@ -367,9 +221,13 @@
             const summaryTaxEl = document.getElementById("sum-tax");
             const summaryTotalEl = document.getElementById("sum-total");
             const checkoutForm = document.getElementById("checkout-form");
+            const checkoutBookingIdEl = document.getElementById("checkout-booking-id");
+            const cancelBtn = document.getElementById("cancel-btn");
 
             const checkoutDateEl = document.getElementById("checkout-date");
             const checkoutTimeEl = document.getElementById("checkout-time");
+            const checkoutStartTimeEl = document.getElementById("checkout-start-time");
+            const checkoutEndTimeEl = document.getElementById("checkout-end-time");
             const checkoutVenueEl = document.getElementById("checkout-venue");
             const checkoutSubtotalEl = document.getElementById("checkout-subtotal");
             const checkoutTaxEl = document.getElementById("checkout-tax");
@@ -382,26 +240,101 @@
             const sendBtn = document.getElementById("send-btn");
 
             const formatPeso = (value) => `₱ ${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
             let activeBookingFilter = "all";
             let selectedBookingCard = null;
+            let currentBookingId = null;
+            let currentBookingStatus = "";
+            let currentBookingPaymentStatus = "unpaid";
+            let currentBookingLoadedCard = null;
+
+            window.currentBookingId = null;
+
+            let selectedVenueId = null;
             let selectedVenueName = "";
             let selectedSubtotal = 0;
             let selectedTax = 0;
             let selectedTotal = 0;
 
+            let viewYear;
+            let viewMonth;
+            let selectedDate = new Date();
+
+            const pad2 = (n) => String(n).padStart(2, "0");
+            const dateToIso = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+            const isoToDate = (iso) => {
+                const [y, m, day] = (iso || "").split("-").map(Number);
+                if (!y || !m || !day) return null;
+                return new Date(y, m - 1, day);
+            };
+            const formatLongDate = (d) => d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+            const syncAvailabilityQuickAction = (d) => {
+                const availabilityButton = quickButtons[0];
+                if (!availabilityButton) {
+                    return;
+                }
+
+                availabilityButton.dataset.chat = `Check package availability for ${formatLongDate(d)}.`;
+            };
+
+            const minutesFromHHMM = (hhmm) => {
+                const [h, m] = (hhmm || "").split(":").map(Number);
+                if (Number.isNaN(h) || Number.isNaN(m)) return null;
+                return h * 60 + m;
+            };
+
             const clearVenueSelection = () => {
-                venueCards.forEach((card) => card.classList.remove("selected"));
-                venueButtons.forEach((button) => {
-                    button.textContent = "Select";
-                    button.classList.remove("is-selected");
+                venueCards.forEach((card) => {
+                    card.classList.remove("selected");
+                    const button = card.querySelector(".btn-select");
+                    if (button) {
+                        button.textContent = "Select";
+                        button.classList.remove("is-selected");
+                    }
                 });
             };
 
+            const validateTimes = () => {
+                const start = startTimeEl.value;
+                const end = endTimeEl.value;
+                const startMin = minutesFromHHMM(start);
+                const endMin = minutesFromHHMM(end);
+                const ok = startMin !== null && endMin !== null && endMin > startMin;
+                timeErrorEl.hidden = ok;
+                return ok;
+            };
+
+            const updateSummaryActions = () => {
+                const hasExistingBooking = Boolean(currentBookingId);
+
+                if (hasExistingBooking) {
+                    const isCancelled = currentBookingStatus === "cancelled";
+                    checkoutBookingIdEl.value = String(currentBookingId || "");
+                    checkoutBtn.textContent = isCancelled ? "Cancelled" : (currentBookingPaymentStatus === "paid" ? "View Invoice" : "Pay Now");
+                    checkoutBtn.disabled = isCancelled;
+                    cancelBtn.hidden = currentBookingStatus !== "upcoming";
+                    return;
+                }
+
+                checkoutBookingIdEl.value = "";
+                checkoutBtn.textContent = "Proceed to Checkout";
+                checkoutBtn.disabled = !(selectedSubtotal > 0 && validateTimes());
+                cancelBtn.hidden = true;
+            };
+
             const syncCheckoutState = () => {
-                checkoutBtn.disabled = selectedSubtotal === 0;
+                updateSummaryActions();
             };
 
             const resetSummary = () => {
+                currentBookingId = null;
+                currentBookingStatus = "";
+                currentBookingPaymentStatus = "unpaid";
+                currentBookingLoadedCard = null;
+                selectedBookingCard = null;
+                window.currentBookingId = null;
+                selectedVenueId = null;
                 selectedVenueName = "";
                 selectedSubtotal = 0;
                 selectedTax = 0;
@@ -413,7 +346,8 @@
                 summaryTaxEl.textContent = formatPeso(0);
                 summaryTotalEl.textContent = formatPeso(0);
                 clearVenueSelection();
-                syncCheckoutState();
+                syncAvailabilityQuickAction(selectedDate);
+                updateSummaryActions();
             };
 
             // Feature 1: Booking time summary.
@@ -421,10 +355,56 @@
                 summaryTimeEl.textContent = `${startTimeEl.value} - ${endTimeEl.value}`;
             };
 
-            const updateDateSummary = (selectedDay) => {
-                summaryDateEl.textContent = selectedDay.dataset.date;
-                calendarDays.forEach((day) => day.classList.remove("current"));
-                selectedDay.classList.add("current");
+            const updateDateSummary = (d) => {
+                selectedDate = d;
+                summaryDateEl.textContent = formatLongDate(d);
+                syncAvailabilityQuickAction(d);
+            };
+
+            const renderCalendar = () => {
+                calendarGrid.querySelectorAll("button.calendar-day").forEach((el) => el.remove());
+
+                calTitle.textContent = `${monthNames[viewMonth]} ${viewYear}`;
+
+                const first = new Date(viewYear, viewMonth, 1);
+                const startIdx = first.getDay();
+                const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+                const prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
+
+                const selectedIsInView = selectedDate.getFullYear() === viewYear && selectedDate.getMonth() === viewMonth;
+                const selectedDayNum = selectedIsInView ? selectedDate.getDate() : null;
+
+                for (let i = 0; i < 42; i += 1) {
+                    const dayNum = i - startIdx + 1;
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "calendar-day";
+
+                    if (dayNum < 1) {
+                        btn.classList.add("muted");
+                        btn.disabled = true;
+                        btn.textContent = String(prevMonthDays + dayNum);
+                    } else if (dayNum > daysInMonth) {
+                        btn.classList.add("muted");
+                        btn.disabled = true;
+                        btn.textContent = String(dayNum - daysInMonth);
+                    } else {
+                        const d = new Date(viewYear, viewMonth, dayNum);
+                        btn.textContent = String(dayNum);
+                        btn.dataset.iso = dateToIso(d);
+                        btn.dataset.date = formatLongDate(d);
+                        if (selectedDayNum === dayNum) {
+                            btn.classList.add("current");
+                        }
+                        btn.addEventListener("click", () => {
+                            calendarGrid.querySelectorAll("button.calendar-day.current").forEach((el) => el.classList.remove("current"));
+                            btn.classList.add("current");
+                            updateDateSummary(d);
+                        });
+                    }
+
+                    calendarGrid.appendChild(btn);
+                }
             };
 
             // Feature 2: Venue selection and pricing summary.
@@ -442,6 +422,7 @@
                 const tax = selectedPrice * 0.12;
                 const total = selectedPrice + tax;
 
+                selectedVenueId = Number(selectedCard.dataset.venueId || 0) || null;
                 selectedVenueName = selectedName;
                 selectedSubtotal = selectedPrice;
                 selectedTax = tax;
@@ -466,40 +447,22 @@
             };
 
             const loadBookingCard = (bookingCard) => {
-                const bookingVenue = bookingCard.dataset.venue || "";
-                const subtotal = Number(bookingCard.dataset.subtotal || 0);
-                const tax = Number(bookingCard.dataset.tax || 0);
-                const total = Number(bookingCard.dataset.total || 0);
-                const bookingTitle = bookingCard.querySelector("h4").textContent;
-                const matchingVenueCard = Array.from(venueCards).find((card) => card.querySelector("h4").textContent.trim() === bookingVenue);
-
-                selectedBookingCard = bookingCard;
-                bookingCards.forEach((card) => card.classList.remove("selected"));
-                bookingCard.classList.add("selected");
-
-                selectedVenueName = bookingVenue;
-                selectedSubtotal = subtotal;
-                selectedTax = tax;
-                selectedTotal = total;
-
-                summaryDateEl.textContent = bookingCard.dataset.date || summaryDateEl.textContent;
-                summaryTimeEl.textContent = bookingCard.dataset.time || summaryTimeEl.textContent;
-                summaryVenueEl.textContent = bookingVenue;
-                summarySourceEl.textContent = bookingTitle;
-                summarySubtotalEl.textContent = formatPeso(subtotal);
-                summaryTaxEl.textContent = formatPeso(tax);
-                summaryTotalEl.textContent = formatPeso(total);
-
-                clearVenueSelection();
-
-                if (matchingVenueCard) {
-                    matchingVenueCard.classList.add("selected");
-                    const matchingButton = matchingVenueCard.querySelector(".btn-select");
-                    matchingButton.textContent = "Selected";
-                    matchingButton.classList.add("is-selected");
-                }
-
-                syncCheckoutState();
+                loadBookingRecord({
+                    id: Number(bookingCard.dataset.bookingId || 0) || null,
+                    status: bookingCard.dataset.status || "upcoming",
+                    payment_status: bookingCard.dataset.paymentStatus || "unpaid",
+                    date: bookingCard.dataset.dateIso || "",
+                    start_time: bookingCard.dataset.startTime || "",
+                    end_time: bookingCard.dataset.endTime || "",
+                    subtotal: Number(bookingCard.dataset.subtotal || 0),
+                    tax: Number(bookingCard.dataset.tax || 0),
+                    total: Number(bookingCard.dataset.total || 0),
+                    venue_package_id: Number(bookingCard.dataset.venueId || 0) || null,
+                    venue_package: {
+                        name: bookingCard.dataset.venue || "",
+                        location_label: bookingCard.dataset.locationLabel || "",
+                    },
+                }, bookingCard);
             };
 
             const applyBookingFilters = () => {
@@ -510,6 +473,263 @@
                     const matchesSearch = card.textContent.toLowerCase().includes(searchQuery);
                     card.hidden = !(matchesFilter && matchesSearch);
                 });
+            };
+
+            const featureToIcon = (feature) => {
+                const f = (feature || "").toLowerCase();
+                if (f.includes("pax")) return "fa-regular fa-user";
+                if (f.includes("wifi")) return "fa-solid fa-wifi";
+                if (f.includes("av") || f.includes("video")) return "fa-solid fa-video";
+                if (f.includes("mic")) return "fa-solid fa-microphone";
+                if (f.includes("record")) return "fa-solid fa-camera";
+                if (f.includes("light")) return "fa-solid fa-lightbulb";
+                if (f.includes("sound") || f.includes("music")) return "fa-solid fa-music";
+                if (f.includes("cater")) return "fa-solid fa-utensils";
+                return "fa-solid fa-circle-info";
+            };
+
+            const renderVenues = (venues) => {
+                venueList.innerHTML = "";
+                venues.forEach((venue) => {
+                    const card = document.createElement("div");
+                    card.className = "venue-item";
+                    card.dataset.price = String(venue.price || 0);
+                    card.dataset.venueId = String(venue.id);
+
+                    const img = document.createElement("div");
+                    img.className = "venue-img";
+                    const imageUrl = (venue.image_url || "").trim();
+                    if (imageUrl) {
+                        img.classList.add("has-image");
+                        img.style.backgroundImage = `url("${imageUrl}")`;
+                        img.textContent = "";
+                    } else {
+                        img.style.backgroundImage = "none";
+                        img.textContent = venue.location_label || "Venue";
+                    }
+
+                    const info = document.createElement("div");
+                    info.className = "venue-info";
+
+                    const name = document.createElement("h4");
+                    name.textContent = venue.name || "Package";
+
+                    const p = document.createElement("p");
+                    const features = Array.isArray(venue.features) ? venue.features : [];
+                    p.innerHTML = features
+                        .map((feat) => `<i class="${featureToIcon(feat)}"></i> ${feat}`)
+                        .join(" | ");
+
+                    info.appendChild(name);
+                    info.appendChild(p);
+
+                    const price = document.createElement("div");
+                    price.className = "venue-price";
+
+                    const priceSpan = document.createElement("span");
+                    priceSpan.textContent = `₱ ${Number(venue.price || 0).toLocaleString()}`;
+
+                    const btn = document.createElement("button");
+                    btn.className = "btn-select";
+                    btn.type = "button";
+                    btn.textContent = "Select";
+                    btn.addEventListener("click", () => updateVenueSelection(card));
+
+                    price.appendChild(priceSpan);
+                    price.appendChild(btn);
+
+                    card.appendChild(img);
+                    card.appendChild(info);
+                    card.appendChild(price);
+
+                    venueList.appendChild(card);
+                });
+
+                venueCards = Array.from(document.querySelectorAll(".venue-item"));
+            };
+
+            const renderBookings = (bookings) => {
+                bookingHistory.innerHTML = "";
+                bookings.forEach((booking) => {
+                    const venue = booking.venue_package || {};
+                    const titleText = `Booking #${booking.id}`;
+
+                    const card = document.createElement("button");
+                    card.type = "button";
+                    card.className = "booking-card";
+                    card.dataset.bookingId = String(booking.id || "");
+                    card.dataset.status = booking.status || "upcoming";
+                    card.dataset.paymentStatus = booking.payment_status || "unpaid";
+                    card.dataset.dateIso = booking.date || "";
+                    card.dataset.startTime = booking.start_time || "";
+                    card.dataset.endTime = booking.end_time || "";
+                    card.dataset.time = booking.time_range || "";
+                    card.dataset.venue = venue.name || "";
+                    card.dataset.locationLabel = venue.location_label || "";
+                    card.dataset.venueId = String(booking.venue_package_id || "");
+                    card.dataset.subtotal = String(booking.subtotal || 0);
+                    card.dataset.tax = String(booking.tax || 0);
+                    card.dataset.total = String(booking.total || 0);
+
+                    const top = document.createElement("div");
+                    top.className = "booking-card-top";
+
+                    const topLeft = document.createElement("div");
+                    const h4 = document.createElement("h4");
+                    h4.textContent = titleText;
+                    const sub = document.createElement("p");
+                    sub.textContent = `${venue.name || ""} · ${venue.location_label || ""}`.trim();
+                    topLeft.appendChild(h4);
+                    topLeft.appendChild(sub);
+
+                    const badge = document.createElement("span");
+                    const normalizedStatus = (booking.status || "upcoming").toLowerCase();
+                    badge.className = `booking-status ${normalizedStatus}`;
+                    badge.textContent = normalizedStatus.charAt(0).toUpperCase() + normalizedStatus.slice(1);
+
+                    top.appendChild(topLeft);
+                    top.appendChild(badge);
+
+                    const meta = document.createElement("div");
+                    meta.className = "booking-meta";
+                    const metaDate = document.createElement("span");
+                    const asDate = isoToDate(booking.date);
+                    metaDate.innerHTML = `<i class="fa-regular fa-calendar"></i> ${asDate ? formatLongDate(asDate) : "-"}`;
+                    const metaTime = document.createElement("span");
+                    metaTime.innerHTML = `<i class="fa-regular fa-clock"></i> ${booking.time_range || "-"}`;
+                    meta.appendChild(metaDate);
+                    meta.appendChild(metaTime);
+
+                    const foot = document.createElement("div");
+                    foot.className = "booking-card-foot";
+                    const totalStrong = document.createElement("strong");
+                    totalStrong.textContent = formatPeso(booking.total || 0);
+                    const hint = document.createElement("span");
+                    hint.textContent = "Tap to load";
+                    foot.appendChild(totalStrong);
+                    foot.appendChild(hint);
+
+                    card.appendChild(top);
+                    card.appendChild(meta);
+                    card.appendChild(foot);
+
+                    card.addEventListener("click", () => loadBookingCard(card));
+                    bookingHistory.appendChild(card);
+                });
+
+                bookingCards = Array.from(document.querySelectorAll(".booking-card"));
+                applyBookingFilters();
+            };
+
+            const loadBookingRecord = (booking, bookingCard = null) => {
+                if (!booking) {
+                    return;
+                }
+
+                const venue = booking.venue_package || {};
+                const bookingTitle = `Booking #${booking.id}`;
+
+                currentBookingId = Number(booking.id || 0) || null;
+                currentBookingStatus = String(booking.status || "upcoming").toLowerCase();
+                currentBookingPaymentStatus = String(booking.payment_status || "unpaid").toLowerCase();
+                currentBookingLoadedCard = bookingCard || null;
+                window.currentBookingId = currentBookingId;
+
+                selectedBookingCard = bookingCard || null;
+                bookingCards.forEach((card) => card.classList.remove("selected"));
+                if (bookingCard) {
+                    bookingCard.classList.add("selected");
+                }
+
+                selectedVenueId = Number(booking.venue_package_id || 0) || null;
+                selectedVenueName = venue.name || "";
+                selectedSubtotal = Number(booking.subtotal || 0);
+                selectedTax = Number(booking.tax || 0);
+                selectedTotal = Number(booking.total || 0);
+
+                const bookingIso = booking.date || "";
+                const bookingDate = isoToDate(bookingIso);
+                if (bookingDate) {
+                    viewYear = bookingDate.getFullYear();
+                    viewMonth = bookingDate.getMonth();
+                    updateDateSummary(bookingDate);
+                    renderCalendar();
+                }
+
+                const start = booking.start_time || startTimeEl.value;
+                const end = booking.end_time || endTimeEl.value;
+                startTimeEl.value = start;
+                endTimeEl.value = end;
+                updateTimeSummary();
+
+                summaryVenueEl.textContent = selectedVenueName || "Not selected";
+                summarySourceEl.textContent = bookingTitle;
+                summarySubtotalEl.textContent = formatPeso(selectedSubtotal);
+                summaryTaxEl.textContent = formatPeso(selectedTax);
+                summaryTotalEl.textContent = formatPeso(selectedTotal);
+
+                clearVenueSelection();
+                const matchingVenueCard = venueCards.find((card) => Number(card.dataset.venueId || 0) === selectedVenueId);
+                if (matchingVenueCard) {
+                    matchingVenueCard.classList.add("selected");
+                    const matchingButton = matchingVenueCard.querySelector(".btn-select");
+                    matchingButton.textContent = "Selected";
+                    matchingButton.classList.add("is-selected");
+                }
+
+                updateSummaryActions();
+            };
+
+            const updateBookingCardStatus = (booking) => {
+                const targetBookingId = String(booking?.id || "");
+                const targetCard = bookingCards.find((card) => String(card.dataset.bookingId || "") === targetBookingId) || currentBookingLoadedCard;
+                if (!targetCard) {
+                    return;
+                }
+
+                const normalizedStatus = String(booking.status || targetCard.dataset.status || "upcoming").toLowerCase();
+                const normalizedPaymentStatus = String(booking.payment_status || targetCard.dataset.paymentStatus || "unpaid").toLowerCase();
+                targetCard.dataset.status = normalizedStatus;
+                targetCard.dataset.paymentStatus = normalizedPaymentStatus;
+
+                const badge = targetCard.querySelector(".booking-status");
+                if (badge) {
+                    badge.className = `booking-status ${normalizedStatus}`;
+                    badge.textContent = normalizedStatus.charAt(0).toUpperCase() + normalizedStatus.slice(1);
+                }
+
+                targetCard.classList.remove("selected");
+            };
+
+            const cancelCurrentBooking = async () => {
+                if (!currentBookingId || currentBookingStatus !== "upcoming") {
+                    return;
+                }
+
+                const bookingIdToCancel = currentBookingId;
+                const confirmed = window.confirm(`Cancel Booking #${bookingIdToCancel}?`);
+                if (!confirmed) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/bookings/${bookingIdToCancel}/cancel`, {
+                        method: "POST",
+                    });
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || "Unable to cancel this booking.");
+                    }
+
+                    updateBookingCardStatus(result.booking || { id: currentBookingId, status: "cancelled" });
+                    selectedBookingCard = null;
+                    currentBookingLoadedCard = null;
+                    resetSummary();
+                    applyBookingFilters();
+                    window.alert(`Booking #${bookingIdToCancel} has been cancelled.`);
+                } catch (error) {
+                    window.alert(error.message || "Unable to cancel this booking.");
+                }
             };
 
             // Feature 3: Customer support chat.
@@ -536,7 +756,16 @@
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({ message })
+                        body: JSON.stringify({
+                            message,
+                            context: {
+                                selected_date: dateToIso(selectedDate),
+                                start_time: startTimeEl.value,
+                                end_time: endTimeEl.value,
+                                venue_id: selectedVenueId,
+                                venue_name: selectedVenueName
+                            }
+                        })
                     });
 
                     if (!response.ok) {
@@ -552,13 +781,21 @@
 
             // Feature 4: Checkout validation feedback.
             const handleCheckout = () => {
-                if (selectedSubtotal === 0) {
+                if (currentBookingId) {
+                    window.location.href = `${bookingInvoiceBaseUrl}/${currentBookingId}`;
                     return;
                 }
 
-                checkoutDateEl.value = summaryDateEl.textContent;
+                if (selectedSubtotal === 0 || !validateTimes()) {
+                    return;
+                }
+
+                checkoutBookingIdEl.value = "";
+                checkoutDateEl.value = dateToIso(selectedDate);
                 checkoutTimeEl.value = summaryTimeEl.textContent;
-                checkoutVenueEl.value = selectedVenueName;
+                checkoutStartTimeEl.value = startTimeEl.value;
+                checkoutEndTimeEl.value = endTimeEl.value;
+                checkoutVenueEl.value = String(selectedVenueId || selectedVenueName);
                 checkoutSubtotalEl.value = selectedSubtotal.toFixed(2);
                 checkoutTaxEl.value = selectedTax.toFixed(2);
                 checkoutTotalEl.value = selectedTotal.toFixed(2);
@@ -577,23 +814,32 @@
 
             bookingSearch.addEventListener("input", applyBookingFilters);
 
-            bookingCards.forEach((card) => {
-                card.addEventListener("click", () => loadBookingCard(card));
+            startTimeEl.addEventListener("change", () => {
+                updateTimeSummary();
+                syncCheckoutState();
             });
-
-            venueButtons.forEach((button) => {
-                button.addEventListener("click", (event) => {
-                    const selectedCard = event.currentTarget.closest(".venue-item");
-                    updateVenueSelection(selectedCard);
-                });
+            endTimeEl.addEventListener("change", () => {
+                updateTimeSummary();
+                syncCheckoutState();
             });
-
-            startTimeEl.addEventListener("change", updateTimeSummary);
-            endTimeEl.addEventListener("change", updateTimeSummary);
             checkoutBtn.addEventListener("click", handleCheckout);
 
-            calendarDays.forEach((day) => {
-                day.addEventListener("click", () => updateDateSummary(day));
+            calPrev.addEventListener("click", () => {
+                viewMonth -= 1;
+                if (viewMonth < 0) {
+                    viewMonth = 11;
+                    viewYear -= 1;
+                }
+                renderCalendar();
+            });
+
+            calNext.addEventListener("click", () => {
+                viewMonth += 1;
+                if (viewMonth > 11) {
+                    viewMonth = 0;
+                    viewYear += 1;
+                }
+                renderCalendar();
             });
 
             quickButtons.forEach((button) => {
@@ -611,15 +857,58 @@
             });
 
             sendBtn.addEventListener("click", sendChat);
+            cancelBtn.addEventListener("click", cancelCurrentBooking);
             userInput.addEventListener("keydown", (event) => {
                 if (event.key === "Enter") {
                     sendChat();
                 }
             });
 
-            resetSummary();
-            updateTimeSummary();
-            applyBookingFilters();
+            const init = async () => {
+                viewYear = selectedDate.getFullYear();
+                viewMonth = selectedDate.getMonth();
+                updateDateSummary(selectedDate);
+                renderCalendar();
+                updateTimeSummary();
+                validateTimes();
+                resetSummary();
+
+                try {
+                    const venuesResp = await fetch("/api/venues");
+                    const venuesData = await venuesResp.json();
+                    renderVenues(venuesData.venues || []);
+                } catch (e) {
+                    venueList.innerHTML = "";
+                }
+
+                try {
+                    const bookingResp = await fetch("/api/bookings");
+                    if (bookingResp.ok) {
+                        const bookingData = await bookingResp.json();
+                        renderBookings(bookingData.bookings || []);
+                        if (initialBookingId) {
+                            const matchingBookingCard = bookingCards.find((card) => Number(card.dataset.bookingId || 0) === initialBookingId);
+                            if (matchingBookingCard) {
+                                loadBookingCard(matchingBookingCard);
+                            } else {
+                                const bookingDetailResp = await fetch(`/api/bookings/${initialBookingId}`);
+                                if (bookingDetailResp.ok) {
+                                    const bookingDetailData = await bookingDetailResp.json();
+                                    loadBookingRecord(bookingDetailData.booking || null);
+                                }
+                            }
+                        }
+                    } else {
+                        renderBookings([]);
+                    }
+                } catch (e) {
+                    renderBookings([]);
+                }
+
+                applyBookingFilters();
+            };
+
+            init();
         });
     </script>
 </body>

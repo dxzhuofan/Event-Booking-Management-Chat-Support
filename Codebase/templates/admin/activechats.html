@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Chats | EventBook</title>
+    <title>Active Chats | DashDesk</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/css/activechats.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/activechats.css') }}">
 </head>
 <body>
     <aside class="sidebar">
-        <div class="sidebar-header">EventBook</div>
+        <div class="sidebar-header">DashDesk</div>
         <nav class="nav-links">
-            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
-            <a href="activechats.html" class="nav-item active"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
-            <a href="booking.html" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
-            <a href="customer.html" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-cog"></i> <span>Settings</span></a>
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-item"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="{{ url_for('admin_activechats') }}" class="nav-item active"><i class="fas fa-comment-dots"></i> <span>Active Chats</span></a>
+            <a href="{{ url_for('admin_booking') }}" class="nav-item"><i class="fas fa-calendar-check"></i> <span>Bookings</span></a>
+            <a href="{{ url_for('admin_customer') }}" class="nav-item"><i class="fas fa-users"></i> <span>Customers</span></a>
+            <a href="{{ url_for('admin_venues') }}" class="nav-item"><i class="fas fa-image"></i> <span>Venues</span></a>
         </nav>
     </aside>
 
@@ -25,26 +25,19 @@
                 <h2>Active Chats</h2>
                 <div class="search-box"><input type="text" placeholder="Search guests..." id="chatSearch"></div>
             </div>
-            <div class="contacts">
-                <div class="contact-item active">
-                    <img src="https://ui-avatars.com/api/?name=Sarah+J&background=ee7752&color=fff" class="avatar">
-                    <div class="contact-info"><span class="name contact-name">Sarah Jenkins</span><br><small>Ballroom inquiry...</small></div>
-                </div>
+            <div class="contacts" id="chatThreads">
+                <div class="contact-item">Loading conversations...</div>
             </div>
         </div>
 
         <div class="chat-window">
             <div class="chat-header">
-                <h3>Sarah Jenkins</h3>
-                <i class="fas fa-info-circle info-icon"></i>
+                <h3 id="chatTitle">Select a conversation</h3>
             </div>
-            <div class="messages-area" id="msgArea">
-                <div class="msg received">Hello! Is the Grand Ballroom available for June 13th?</div>
-                <div class="msg sent">Checking that for you right now, Sarah!</div>
-            </div>
+            <div class="messages-area" id="msgArea"></div>
             <div class="input-area">
-                <input type="text" placeholder="Type a message..." id="chatInput">
-                <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+                <input type="text" placeholder="Read-only conversation view" id="chatInput" disabled>
+                <button class="send-btn" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -57,32 +50,135 @@
             }
         });
 
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
+        const chatThreads = document.getElementById('chatThreads');
+        const chatTitle = document.getElementById('chatTitle');
         const msgArea = document.getElementById('msgArea');
+        const chatSearch = document.getElementById('chatSearch');
+        const activeChatsSearchParams = new URLSearchParams(window.location.search);
+        const customerEmailFilter = String(activeChatsSearchParams.get('customer_email') || '').trim().toLowerCase();
 
-        function sendMsg() {
-            if (chatInput.value.trim()) {
-                const msg = document.createElement('div');
-                msg.className = 'msg sent';
-                msg.innerText = chatInput.value;
-                msgArea.appendChild(msg);
-                chatInput.value = '';
-                msgArea.scrollTop = msgArea.scrollHeight;
-            }
-        }
+        let threads = [];
+        let activeThread = null;
+        let appliedCustomerFilter = false;
 
-        sendBtn.onclick = sendMsg;
-        chatInput.onkeypress = (e) => { if(e.key === 'Enter') sendMsg(); };
-
-        // Search logic
-        document.getElementById('chatSearch').onkeyup = function() {
-            let term = this.value.toLowerCase();
-            document.querySelectorAll('.contact-item').forEach(item => {
-                let name = item.querySelector('.name').innerText.toLowerCase();
-                item.style.display = name.includes(term) ? 'flex' : 'none';
-            });
+        const formatTime = (value) => {
+            if (!value) return '';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
         };
+
+        const renderMessages = (thread) => {
+            msgArea.innerHTML = '';
+            if (!thread || !Array.isArray(thread.messages) || !thread.messages.length) {
+                msgArea.innerHTML = '<div class="msg received">No messages for this conversation yet.</div>';
+                return;
+            }
+
+            thread.messages.forEach((message) => {
+                const msg = document.createElement('div');
+                msg.className = `msg ${message.role === 'user' ? 'received' : 'sent'}`;
+                msg.innerText = message.text;
+                msgArea.appendChild(msg);
+            });
+            msgArea.scrollTop = msgArea.scrollHeight;
+        };
+
+        const renderThreads = (sourceThreads) => {
+            chatThreads.innerHTML = '';
+
+            if (!sourceThreads.length) {
+                chatThreads.innerHTML = '<div class="contact-item">No active chats yet.</div>';
+                chatTitle.textContent = 'Select a conversation';
+                renderMessages(null);
+                return;
+            }
+
+            if (customerEmailFilter && !appliedCustomerFilter) {
+                activeThread = sourceThreads.find((thread) => String(thread.user_email || '').toLowerCase() === customerEmailFilter) || null;
+                appliedCustomerFilter = true;
+            } else if (!activeThread || !sourceThreads.some((thread) => thread.user_email === activeThread.user_email)) {
+                activeThread = sourceThreads[0] || null;
+            }
+
+            sourceThreads.forEach((thread, index) => {
+                const item = document.createElement('div');
+                item.className = `contact-item ${activeThread && activeThread.user_email === thread.user_email ? 'active' : ''}`;
+
+                const avatar = document.createElement('img');
+                avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(thread.customer_name || thread.user_email || 'Customer')}&background=111111&color=fff`;
+                avatar.className = 'avatar';
+                avatar.alt = thread.customer_name || thread.user_email || 'Customer';
+
+                const info = document.createElement('div');
+                info.className = 'contact-info';
+
+                const name = document.createElement('span');
+                name.className = 'name contact-name';
+                name.innerText = thread.customer_name || thread.user_email || 'Customer';
+
+                const meta = document.createElement('small');
+                const snippet = thread.last_message || thread.last_reply || 'No recent message';
+                meta.innerText = `${snippet.slice(0, 42)}${snippet.length > 42 ? '…' : ''}${thread.relative_time ? ` · ${thread.relative_time}` : ''}`;
+
+                info.appendChild(name);
+                info.appendChild(document.createElement('br'));
+                info.appendChild(meta);
+
+                item.appendChild(avatar);
+                item.appendChild(info);
+                item.addEventListener('click', () => {
+                    activeThread = thread;
+                    renderThreads(sourceThreads);
+                    chatTitle.textContent = thread.customer_name || thread.user_email || 'Customer';
+                    renderMessages(thread);
+                });
+
+                chatThreads.appendChild(item);
+
+                if (index === 0 && !activeThread) {
+                    activeThread = thread;
+                }
+            });
+
+            if (activeThread) {
+                const selected = sourceThreads.find((thread) => thread.user_email === activeThread.user_email) || sourceThreads[0];
+                activeThread = selected;
+                chatTitle.textContent = selected.customer_name || selected.user_email || 'Customer';
+                renderMessages(selected);
+            } else if (customerEmailFilter) {
+                chatTitle.textContent = 'No conversation found for this customer';
+                renderMessages(null);
+            }
+        };
+
+        const loadThreads = async () => {
+            try {
+                const response = await fetch('/api/admin/activechats');
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load active chats.');
+                }
+                threads = Array.isArray(data.threads) ? data.threads : [];
+                renderThreads(threads);
+            } catch (error) {
+                chatThreads.innerHTML = `<div class="contact-item">${error.message || 'Failed to load active chats.'}</div>`;
+                renderMessages(null);
+            }
+        };
+
+        chatSearch.onkeyup = function() {
+            const term = this.value.toLowerCase();
+            const filtered = threads.filter((thread) => {
+                const name = String(thread.customer_name || thread.user_email || '').toLowerCase();
+                const message = String(thread.last_message || thread.last_reply || '').toLowerCase();
+                return name.includes(term) || message.includes(term);
+            });
+            activeThread = filtered[0] || null;
+            renderThreads(filtered);
+        };
+
+        loadThreads();
     </script>
 </body>
 </html>
