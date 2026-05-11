@@ -22,10 +22,11 @@ from sqlalchemy import inspect, text, func
 from models import db, User, VenuePackage, Booking, ChatMessage, EmailLog
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "..", "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "..", "static")
 
-load_dotenv()
+load_dotenv(os.path.join(ROOT_DIR, ".env"))
 
 
 def _env_int(name, default):
@@ -42,7 +43,9 @@ def _env_bool(name, default=False):
     return raw_value.strip().lower() in {"1", "true", "yes", "on"}
 
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "eventbook-dev-secret")
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
+if not app.secret_key:
+    raise RuntimeError("FLASK_SECRET_KEY must be set in your local .env file or environment.")
 
 DB_PATH = os.path.join(BASE_DIR, "eventbook.sqlite")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI", f"sqlite:///{DB_PATH}")
