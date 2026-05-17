@@ -26,7 +26,7 @@ ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "..", "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "..", "static")
 
-load_dotenv(os.path.join(ROOT_DIR, ".env"))
+load_dotenv(os.path.join(ROOT_DIR, ".env"), override=True)
 
 
 def _env_int(name, default):
@@ -1694,11 +1694,13 @@ def admin_customer():
     return render_template("admin/customer.html")
 
 
-@app.route("/admin/unlock")
+@app.route("/admin/unlock", methods=["GET", "POST"])
 def admin_unlock():
-    key = (request.args.get("key") or "").strip()
+    key = (request.values.get("key") or "").strip()
     if not ADMIN_KEY:
         return "Admin key not configured", 500
+    if not key:
+        return "Admin key required", 400
     if key != ADMIN_KEY:
         return "Forbidden", 403
     session["is_admin"] = True
